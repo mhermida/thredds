@@ -39,6 +39,7 @@ import opendap.servers.*;
 import opendap.servlet.AsciiWriter;
 import opendap.servlet.GuardedDataset;
 import opendap.test.Diff;
+import org.junit.Test;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.dataset.NetcdfDataset;
 
@@ -49,7 +50,7 @@ import java.util.Enumeration;
 
 // Test that the Constraint parsing is correct
 
-public class TestCEEvaluator extends TestCase
+public class TestCEEvaluator extends ucar.nc2.util.TestCommon
 {
     static boolean debug = true;
 
@@ -61,10 +62,8 @@ public class TestCEEvaluator extends TestCase
     //  /data/testdata/pub/decoded/netcdf/grid/NCEP/NAM
 
 
-    // All .nc files are stored here
-    //static final String testdir = "src/test/data/testdata2";
-    //static final String testdir = "//fileserver/share/testdata/cdmUnitTest/conventions/mars";
-    static final String DFALTTESTDIR = "src/test/data/testdata2";
+    // Vis-a-vis threddsRoot
+    static final String DFALTTESTDIR = "opendap/src/test/data/testdata2";
 
 
     static final String[][] testsets = new String[][]{
@@ -95,7 +94,7 @@ public class TestCEEvaluator extends TestCase
 
     //////////////////////////////////////////////////
 
-    String testdir = DFALTTESTDIR;
+    String datadir = DFALTTESTDIR;
 
     //////////////////////////////////////////////////
     // Constructors + etc.
@@ -103,12 +102,10 @@ public class TestCEEvaluator extends TestCase
     public TestCEEvaluator(String name)
     {
         super(name);
-        // Check to see if we are in the correct working directory
-        String userdir = System.getProperty( "user.dir" );
-        if(userdir.endsWith("cdm")) {
-            // we are being run under TestAll
-            this.testdir = "../opendap/" +  this.testdir;
-        }
+
+	/* Compute path to the data directory */
+	this.datadir = threddsRoot + "/" + DFALTTESTDIR ;
+
     }
 
     protected void setUp()
@@ -118,6 +115,7 @@ public class TestCEEvaluator extends TestCase
 
     //////////////////////////////////////////////////
 
+    @Test
     public void testCEEvaluator() throws Exception
     {
         if(generate) dogenerate();
@@ -141,7 +139,7 @@ loop:        for(int i = 0; i < ntestsets && pass; i++) {
             String[] testset = testsets[i];
             int ntests = (testset.length);
             String basename = testset[1];
-            String path = testdir + "/" + basename;
+            String path = datadir + "/" + basename;
 
             for(int j = 2; j < ntests && pass; j+=2) {
                 String constraint = testset[j+1];
@@ -240,7 +238,7 @@ loop:        for(int i = 0; i < ntestsets && pass; i++) {
             String[] testset = testsets[i];
             int ntests = testset.length;
             String basename = testset[0];
-            String path = testdir + "/" + basename;
+            String path = datadir + "/" + basename;
 
             // generate the complete unconstrained data set
             file = new File(path);

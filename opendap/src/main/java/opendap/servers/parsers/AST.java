@@ -165,9 +165,9 @@ class ASTprojection extends AST
     private void markStackedVariables(Stack s) {
         // Reverse the stack.
         Stack bts = new Stack();
-        // System.err.println("Variables to be marked:");
+        // LogStream.err.println("Variables to be marked:");
         while (!s.empty()) {
-            //System.err.println(((BaseType)s.peek()).getName());
+            //LogStream.err.println(((BaseType)s.peek()).getName());
             bts.push(s.pop());
         }
 
@@ -183,13 +183,13 @@ class ASTprojection extends AST
             DAPNode dn = (DAPNode)bts.pop();
             ServerMethods ct = (ServerMethods)dn;
             ct.setProject(true, false);
-            //System.err.println("mark singleton: " + dn.getName());
+            //LogStream.err.println("mark singleton: " + dn.getName());
         }
         DAPNode dn = (DAPNode)bts.pop();
         // For the last element, project the entire variable.
         ServerMethods bt = (ServerMethods)dn;
         bt.setProject(true, true);
-        //System.err.println("mark all: " + dn.getName()); System.err.flush();
+        //LogStream.err.println("mark all: " + dn.getName()); LogStream.err.flush();
     }
 
 
@@ -516,7 +516,7 @@ class ASTclause extends AST
         if (operator < 0
             || operator >= operatorImage.length
             || operatorImage[operator] == null)
-        System.err.println("Illegal operator");
+        LogStream.err.println("Illegal operator");
         return operatorImage[operator];
     }
 */

@@ -15,6 +15,7 @@ import opendap.dap.parsers.*;
 import opendap.servers.*;
 import java.io.*;
 import java.util.*;
+import ucar.nc2.util.log.LogStream;
 }
 
 %code {

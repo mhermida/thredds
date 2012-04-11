@@ -253,6 +253,7 @@ class Celex implements Lexer, ExprParserConstants
             LogStream.err.printf("TOKEN = |%c|\n", (char)token);
             break;
         }
+        LogStream.err.logflush();
     }
 
     static int
@@ -302,6 +303,7 @@ class Celex implements Lexer, ExprParserConstants
         if(parsestate.getURL() != null) LogStream.err.println("\turl="+parsestate.getURL());
         LogStream.err.println("\tconstraint="+(constraint==null?"none":constraint));
         new Exception().printStackTrace(LogStream.err);
+        LogStream.err.logflush();
     }
 
     public void lexerror(String msg)

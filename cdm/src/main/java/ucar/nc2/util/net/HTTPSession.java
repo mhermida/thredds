@@ -574,7 +574,7 @@ void
 setProxy(Proxy proxy)
 {
     if(sessionClient == null) return;
-    //if(proxy != null && proxy.host != null)
+    if(proxy != null && proxy.host != null)
         sessionClient.getHostConfiguration().setProxy(proxy.host, proxy.port);
 }
 

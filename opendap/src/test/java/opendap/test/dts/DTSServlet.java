@@ -55,7 +55,7 @@ import opendap.util.Debug;
 import ucar.nc2.util.net.EscapeStrings;
 
 /**
- * TestServlet is a servlet to support client testing.
+ * DTSServlet is a servlet to support client testing.
  *
  * Default handlers for all of the acceptable OPeNDAP client
  * requests are here.
@@ -207,7 +207,7 @@ import ucar.nc2.util.net.EscapeStrings;
  * @version $Revision: 16122 $
  */
 
-public class TestServlet extends AbstractServlet
+public class DTSServlet extends AbstractServlet
 {
   // Class variables
   static final String DEFAULTCONTEXTPATH = "/dts";
@@ -346,7 +346,7 @@ public class TestServlet extends AbstractServlet
    * impunity) from anywhere in the VM.
    */
 
-   public TestServlet()
+   public DTSServlet()
    {
    }
 
@@ -1637,7 +1637,7 @@ public class TestServlet extends AbstractServlet
    * understood, then the appropriate handler method is called, otherwise
    * an error is returned to the client.
    * <p/>
-   * This method is the entry point for <code>TestServlet</code>.
+   * This method is the entry point for <code>DTSServlet</code>.
    *
    * @param request  The client's <code> HttpServletRequest</code> request
    *                 object.

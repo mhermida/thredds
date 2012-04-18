@@ -33,10 +33,12 @@
 package ucar.nc2.util.net;
 
 import org.junit.Test;
+import ucar.nc2.util.TestCommon;
 
 import static junit.framework.Assert.assertTrue;
 
-public class TestMisc extends ucar.nc2.util.TestCommon {
+public class TestMisc extends TestCommon
+{
   //////////////////////////////////////////////////
 
   // Define the test sets

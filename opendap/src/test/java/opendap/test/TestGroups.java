@@ -34,6 +34,7 @@ package opendap.test;
 
 import org.junit.Test;
 import ucar.nc2.dods.DODSNetcdfFile;
+import ucar.nc2.util.TestCommon;
 import ucar.nc2.util.rc.RC;
 import ucar.unidata.test.Diff;
 
@@ -41,7 +42,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestGroups extends ucar.nc2.util.TestCommon {
+public class TestGroups extends TestCommon
+{
   static final String DFALTTESTSERVER = "motherlode.ucar.edu:8080";
 
   public TestGroups() {
@@ -93,7 +95,7 @@ public class TestGroups extends ucar.nc2.util.TestCommon {
 
     if (!RC.getUseGroups()) {
       System.out.println("Groups not supported; continuing");
-      //junit.framework.Assert.assertTrue("Groups not supported; continuing", true);
+      //assertTrue("Groups not supported; continuing", true);
       //return; // do not run if groups are not being supported
     }
 
@@ -120,7 +122,7 @@ public class TestGroups extends ucar.nc2.util.TestCommon {
       baserdr.close();
       resultrdr.close();
       if (!pass) {
-        junit.framework.Assert.assertTrue("Testing " + result.title, pass);
+        assertTrue("Testing " + result.title, pass);
       }
       // Dump the output for visual comparison
       if (System.getProperty("visual") != null) {

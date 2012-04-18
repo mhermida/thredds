@@ -42,7 +42,6 @@ public enum HTTPAuthScheme
     BASIC("BASIC"),
     DIGEST("DIGEST"),
     SSL("SSL"),
-    PROXY("PROXY"),
     ANY("ANY");
 
     // Define the associated standard name
@@ -68,8 +67,10 @@ public enum HTTPAuthScheme
     static public HTTPAuthScheme fromAuthScope(String scheme)
     {
 	if(scheme == null) return null;
-	if(scheme.equals(org.apache.commons.httpclient.auth.AuthPolicy.BASIC)) return BASIC;
-	if(scheme.equals(org.apache.commons.httpclient.auth.AuthPolicy.DIGEST)) return DIGEST;
+	if(scheme.equals(org.apache.commons.httpclient.auth.AuthPolicy.BASIC))
+	    return BASIC;
+	if(scheme.equals(org.apache.commons.httpclient.auth.AuthPolicy.DIGEST))
+	    return DIGEST;
 	return null;
     }
 }

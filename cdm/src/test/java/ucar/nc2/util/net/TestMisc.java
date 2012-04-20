@@ -57,9 +57,9 @@ public class TestMisc extends UnitTestCommon
   }
 
   static final String[] esinputs = {
-          "http://localhost:8080/dts/test.01",
-          "http://localhost:8080///xx/",
-          "http://localhost:8080/<>^/`/",
+          "http://localhost:8081/dts/test.01",
+          "http://localhost:8081///xx/",
+          "http://localhost:8081/<>^/`/",
   };
   static final String[] esoutputs = {
           "http://localhost:8081/dts/test.01",

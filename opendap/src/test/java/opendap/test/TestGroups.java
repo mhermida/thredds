@@ -44,7 +44,7 @@ import java.util.List;
 
 public class TestGroups extends UnitTestCommon
 {
-  static final String DFALTTESTSERVER = "motherlode.ucar.edu:8080";
+  static final String DFALTTESTSERVER = "motherlode.ucar.edu:8081";
 
   public TestGroups() {
     setTitle("DAP Group tests");

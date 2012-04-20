@@ -39,6 +39,7 @@ import org.apache.commons.httpclient.auth.CredentialsNotAvailableException;
 import org.apache.commons.httpclient.auth.AuthScheme;
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.protocol.Protocol;
+import org.junit.Test;
 import ucar.nc2.util.UnitTestCommon;
 
 import java.io.*;
@@ -137,11 +138,16 @@ public class TestAuth extends UnitTestCommon
         this(name, null);
     }
 
+    public TestAuth()
+        {
+            this("TestAuth", null);
+        }
+    @Test
     public void
     testSSH() throws Exception
     {
         String[] sshurls = {
-                "https://motherlode.ucar.edu:8443/dts/b31.dds"
+                "https://motherlode.ucar.edu:8444/dts/b31.dds"
         };
 
         System.out.println("*** Testing: Simple Https");
@@ -174,6 +180,7 @@ public class TestAuth extends UnitTestCommon
         }
     }
 
+    @Test
     public void
     testBasic() throws Exception
     {
@@ -230,6 +237,7 @@ public class TestAuth extends UnitTestCommon
     }
 
     // This test is turned off until such time as motherlode is properly set up
+    @Test
     public void
     testKeystore() throws Exception
     {
@@ -274,6 +282,7 @@ public class TestAuth extends UnitTestCommon
         }
     }
 
+    @Test
     public void
     testSerialize() throws Exception
     {
@@ -340,6 +349,7 @@ public class TestAuth extends UnitTestCommon
 
     // This test actually is does nothing because I have no way to test it
     // since it requires a firwall proxy that requires username+pwd
+    @Test
     public void
     testFirewall() throws Exception
     {

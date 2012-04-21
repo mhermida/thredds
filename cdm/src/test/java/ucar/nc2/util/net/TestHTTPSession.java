@@ -33,11 +33,11 @@
 package ucar.nc2.util.net;
 
 import org.junit.Test;
-import ucar.nc2.util.TestCommon;
+import ucar.nc2.util.UnitTestCommon;
 
 import static junit.framework.Assert.assertTrue;
 
-public class TestHTTPSession extends TestCommon
+public class TestHTTPSession extends UnitTestCommon
 {
   //////////////////////////////////////////////////
 

@@ -1,13 +1,13 @@
 package opendap.test;
 
-import ucar.nc2.util.TestCommon;
+import ucar.nc2.util.UnitTestCommon;
 
 import java.io.File;
 import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TestSources extends TestCommon
+public class TestSources extends UnitTestCommon
 {
 //////////////////////////////////////////////////
 // Remote test info

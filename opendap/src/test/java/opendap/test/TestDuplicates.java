@@ -34,14 +34,14 @@ package opendap.test;
 
 import org.junit.Test;
 import ucar.nc2.dods.DODSNetcdfFile;
-import ucar.nc2.util.TestCommon;
+import ucar.nc2.util.UnitTestCommon;
 import ucar.unidata.test.Diff;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestDuplicates extends TestCommon
+public class TestDuplicates extends UnitTestCommon
 {
   static final String DFALTTESTSERVER = "motherlode.ucar.edu:8080";
 

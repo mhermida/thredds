@@ -34,7 +34,7 @@ package opendap.test;
 
 import org.junit.Test;
 import ucar.nc2.dods.DODSNetcdfFile;
-import ucar.nc2.util.TestCommon;
+import ucar.nc2.util.UnitTestCommon;
 import ucar.nc2.util.rc.RC;
 import ucar.unidata.test.Diff;
 
@@ -42,7 +42,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestGroups extends TestCommon
+public class TestGroups extends UnitTestCommon
 {
   static final String DFALTTESTSERVER = "motherlode.ucar.edu:8080";
 

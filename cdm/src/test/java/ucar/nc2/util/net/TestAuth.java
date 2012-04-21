@@ -39,14 +39,13 @@ import org.apache.commons.httpclient.auth.CredentialsNotAvailableException;
 import org.apache.commons.httpclient.auth.AuthScheme;
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.protocol.Protocol;
-import org.junit.Test;
-import ucar.nc2.util.TestCommon;
+import ucar.nc2.util.UnitTestCommon;
 
 import java.io.*;
 import java.util.List;
 import java.io.Serializable;
 
-public class TestAuth extends TestCommon
+public class TestAuth extends UnitTestCommon
 {
     // Add a temporary control for motherlode versus localhost
     static boolean motherlode = false;

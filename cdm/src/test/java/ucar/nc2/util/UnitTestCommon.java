@@ -38,7 +38,7 @@ import org.junit.Test;
 import ucar.nc2.NetcdfFile;
 import java.io.File;
 
-public class TestCommon extends TestCase
+public class UnitTestCommon extends TestCase
 {
   static public boolean debug = false;
 
@@ -104,11 +104,11 @@ public class TestCommon extends TestCase
   String title = "Testing";
   String name = "testcommon";
 
-  public TestCommon()
+  public UnitTestCommon()
   {
   }
 
-  public TestCommon(String name)
+  public UnitTestCommon(String name)
   {
     this.name = name;
   }
@@ -121,7 +121,5 @@ public class TestCommon extends TestCase
     return this.title;
   }
 
-  // Surefile seems to want to call a test no matter what.
-  public void testNull() throws Exception {assertTrue("testNull",true);}
 }
 

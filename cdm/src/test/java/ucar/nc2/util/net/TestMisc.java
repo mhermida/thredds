@@ -33,11 +33,11 @@
 package ucar.nc2.util.net;
 
 import org.junit.Test;
-import ucar.nc2.util.TestCommon;
+import ucar.nc2.util.UnitTestCommon;
 
 import static junit.framework.Assert.assertTrue;
 
-public class TestMisc extends TestCommon
+public class TestMisc extends UnitTestCommon
 {
   //////////////////////////////////////////////////
 
@@ -62,9 +62,9 @@ public class TestMisc extends TestCommon
           "http://localhost:8080/<>^/`/",
   };
   static final String[] esoutputs = {
-          "http://localhost:8080/dts/test.01",
-          "http://localhost:8080///xx/",
-          "http://localhost:8080/%3c%3e%5e/%60/",
+          "http://localhost:8081/dts/test.01",
+          "http://localhost:8081///xx/",
+          "http://localhost:8081/%3c%3e%5e/%60/",
   };
 
   @Test
@@ -74,6 +74,9 @@ public class TestMisc extends TestCommon
     assert (esinputs.length == esoutputs.length);
     for (int i = 0; i < esinputs.length && pass; i++) {
       String result = EscapeStrings.escapeURL(esinputs[i]);
+        System.err.printf("input= |%s|\n",esinputs[i]);
+        System.err.printf("result=|%s|\n",result);
+        System.err.printf("output=|%s|\n",esoutputs[i]);
       if (!result.equals(esoutputs[i])) pass = false;
       System.out.printf("input=%s output=%s pass=%s\n", esinputs[i], result, pass);
     }

@@ -27,113 +27,34 @@
        =========================================================== -->
   <dependencies>
     <dependency>
-       <groupId>edu.ucar</groupId>
-       <artifactId>netcdf</artifactId>
-     </dependency>
-     <dependency>
-       <groupId>edu.ucar</groupId>
-       <artifactId>bufr</artifactId>
-     </dependency>
-     <dependency>
-       <groupId>edu.ucar</groupId>
-       <artifactId>grib</artifactId>
-     </dependency>
-     <dependency>
-       <groupId>edu.ucar</groupId>
-       <artifactId>udunits</artifactId>
-     </dependency>
-    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>tds</artifactId>
       <type>war</type>
     </dependency>
-
-     <dependency>
-       <groupId>commons-httpclient</groupId>
-       <artifactId>commons-httpclient</artifactId>
-     </dependency>
-     <dependency>
-       <groupId>commons-fileupload</groupId>
-       <artifactId>commons-fileupload</artifactId>
-     </dependency>
-
-     <dependency>
-       <groupId>org.jdom</groupId>
-       <artifactId>jdom</artifactId>
-     </dependency>
-     <dependency>
-       <groupId>joda-time</groupId>
-       <artifactId>joda-time</artifactId>
-     </dependency>
-     <dependency>
-       <groupId>org.quartz-scheduler</groupId>
-       <artifactId>quartz</artifactId>
-     </dependency>
-     <dependency>
-       <groupId>com.google.protobuf</groupId>
-       <artifactId>protobuf-java</artifactId>
-     </dependency>
-     <dependency>
-       <groupId>net.sf.ehcache</groupId>
-       <artifactId>ehcache</artifactId>
-       <scope>runtime</scope>
-     </dependency>
-     <dependency>
-       <artifactId>je</artifactId>
-       <groupId>com.sleepycat</groupId>
-     </dependency>
-
-     <dependency>
-       <groupId>org.slf4j</groupId>
-       <artifactId>slf4j-api</artifactId>
-     </dependency>
-     <dependency>
-       <groupId>org.slf4j</groupId>
-       <artifactId>slf4j-log4j12</artifactId>
-       <scope>runtime</scope>
-     </dependency>
-     <dependency>
-       <groupId>log4j</groupId>
-       <artifactId>log4j</artifactId>
-     </dependency>
-     <dependency>
-       <groupId>org.slf4j</groupId>
-       <artifactId>jcl-over-slf4j</artifactId>
-       <scope>runtime</scope>
-     </dependency>
-
-     <dependency>
-       <groupId>org.springframework</groupId>
-       <artifactId>spring-webmvc</artifactId>
-     </dependency>
-
-    <!-- tomcat -->
+    
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>jstl</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>taglibs</groupId>
-      <artifactId>standard</artifactId>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>tds</artifactId>
+      <type>jar</type>
+      <classifier>classes</classifier>
     </dependency>
 
+
+    <dependency>
+    	<groupId>commons-io</groupId>
+    	<artifactId>commons-io</artifactId>
+    	<scope>runtime</scope>
+    </dependency>
   </dependencies>
 
   <build>
     <finalName>cdmvalidator</finalName>
     <plugins>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
-        <version>2.1.1</version>
         <configuration>
-          <attachClasses>true</attachClasses>
+          <attachClasses>true</attachClasses>        
           <archive>
             <manifest>
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
@@ -142,10 +63,31 @@
               <Built-On>${maven.build.timestamp}</Built-On>
             </manifestEntries>
           </archive>
+          <workDirectory>target/overlay-war-folder</workDirectory>
+          <overlays>
+          	<overlay>
+				<groupId>${project.groupId}</groupId>				
+      			<artifactId>tds</artifactId>
+      			<excludes>
+      			    <exclude>WEB-INF/classes/thredds/server/cdmvalidator/**</exclude>
+      				<exclude>WEB-INF/jsp/**</exclude>
+      				<exclude>WEB-INF/palettes/**</exclude>
+      				<exclude>WEB-INF/taglib/**</exclude>
+      				<exclude>WEB-INF/tags/**</exclude>
+      				<exclude>WEB-INF/tld/**</exclude>
+      				<exclude>WEB-INF/views/**</exclude>
+      				<exclude>WEB-INF/xsl/**</exclude>
+      				<exclude>WEB-INF/*.xml</exclude>
+      				<exclude>WEB-INF/lib/*.jar</exclude>
+      			</excludes>
+          	</overlay>
+          </overlays>
+
         </configuration>
       </plugin>
 
-    </plugins>
+    </plugins
+    >
   </build>
 
 </project>

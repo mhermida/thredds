@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
+import thredds.server.cdmvalidator.CdmValidatorContext;
 import thredds.servlet.UsageLog;
 import ucar.nc2.dataset.NetcdfDatasetInfo;
 import ucar.unidata.util.StringUtil2;
@@ -287,8 +288,8 @@ public class CdmValidatorController extends AbstractController {
 
   private InputStream getXSLT() {
     Class c = CdmValidatorController.class;
-    //String resource = "/WEB-INF/classes/resources/xsl/cdmValidation.xsl";
-    String resource = "/resources/xsl/cdmValidation.xsl";
+    String resource = "/xsl/cdmValidation.xsl";
+    //String resource = "/resources/xsl/cdmValidation.xsl";
     InputStream is = c.getResourceAsStream(resource);
     if (null == is)
       log.error("getXSLT(): Cant load XSLT resource = " + resource);

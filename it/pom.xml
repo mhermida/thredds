@@ -163,7 +163,7 @@
       <!-- ===========================================================
          Cargo configuration.
         Runs in the pre-integration-test and post-integration-test phases
-        It uses a new tomcat 7.0.25. It downloads, installs, runs and stops a new tomcat instance on every run.
+        It uses a new tomcat 7.0.27. It downloads, installs, runs and stops a new tomcat instance on every run.
          It could also use an existing tomcat instance.
      =========================================================== -->
       <plugin>

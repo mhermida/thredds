@@ -26,11 +26,11 @@
            Dependencies
        =========================================================== -->
   <dependencies>
-    <dependency>
+    <!-- dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>tds</artifactId>
       <type>war</type>
-    </dependency>
+    </dependency-->
     
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -49,6 +49,12 @@
 
   <build>
     <finalName>cdmvalidator</finalName>
+	<resources>
+      <resource>
+        <directory>${basedir}/src/main/resources</directory>
+        <filtering>true</filtering>
+     </resource>
+    </resources>    
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -63,12 +69,25 @@
               <Built-On>${maven.build.timestamp}</Built-On>
             </manifestEntries>
           </archive>
-          <workDirectory>target/overlay-war-folder</workDirectory>
+          
+          <webResources>
+            <resource>
+              <targetPath>WEB-INF/classes</targetPath>
+              <filtering>true</filtering>
+              <directory>${basedir}/src/main/template</directory>
+              <includes>
+                <include>**/*.properties</include>
+              </includes>
+            </resource>
+          </webResources>          
+          
+          <!-- workDirectory>target/overlay-war-folder</workDirectory>                              
           <overlays>
           	<overlay>
 				<groupId>${project.groupId}</groupId>				
       			<artifactId>tds</artifactId>
       			<excludes>
+      			    <exclude>WEB-INF/classes/thredds/server/*.properties</exclude>
       			    <exclude>WEB-INF/classes/thredds/server/cdmvalidator/**</exclude>
       				<exclude>WEB-INF/jsp/**</exclude>
       				<exclude>WEB-INF/palettes/**</exclude>
@@ -78,16 +97,16 @@
       				<exclude>WEB-INF/views/**</exclude>
       				<exclude>WEB-INF/xsl/**</exclude>
       				<exclude>WEB-INF/*.xml</exclude>
+      				<exclude>godiva2/**</exclude>
+      				<exclude>docs/**</exclude>
       				<exclude>WEB-INF/lib/*.jar</exclude>
       			</excludes>
           	</overlay>
-          </overlays>
+          </overlays-->
 
         </configuration>
       </plugin>
 
-    </plugins
-    >
-  </build>
-
+    </plugins>
+  </build>  
 </project>

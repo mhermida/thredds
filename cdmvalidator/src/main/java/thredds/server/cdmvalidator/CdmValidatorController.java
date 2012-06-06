@@ -1,35 +1,36 @@
 package thredds.server.cdmvalidator;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItem;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.springframework.web.servlet.mvc.AbstractController;
-import org.springframework.web.servlet.ModelAndView;
-import org.slf4j.MDC;
-import org.jdom.Document;
-import org.jdom.output.XMLOutputter;
-import org.jdom.output.Format;
-import org.jdom.transform.XSLTransformer;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
-
-import thredds.server.cdmvalidator.CdmValidatorContext;
-import thredds.servlet.UsageLog;
-import ucar.nc2.dataset.NetcdfDatasetInfo;
-import ucar.unidata.util.StringUtil2;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.jdom.Document;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
+import org.jdom.transform.XSLTransformer;
+import org.slf4j.MDC;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.AbstractController;
+
+import thredds.server.config.HtmlConfig;
+import thredds.servlet.ThreddsConfig;
+import thredds.servlet.UsageLog;
+import ucar.nc2.dataset.NetcdfDatasetInfo;
+import ucar.unidata.util.StringUtil2;
 
 /**
  * CdmValidator Spring Controller
@@ -64,8 +65,11 @@ public class CdmValidatorController extends AbstractController {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("contextPath", request.getContextPath());
         model.put("servletPath", request.getServletPath());
-
-        this.cdmValidatorContext.getHtmlConfig().addHtmlConfigInfoToModel(model);
+        //CSS style
+        String standardCssUrl = ThreddsConfig.get("htmlSetup.standardCssUrl", "tds.css");
+        HtmlConfig htmlConfig =  this.cdmValidatorContext.getHtmlConfig();
+        htmlConfig.setPageCssUrl(standardCssUrl);
+        htmlConfig.addHtmlConfigInfoToModel(model);
 
         log.info("handleRequestInternal(): " + UsageLog.closingMessageForRequestContext(HttpServletResponse.SC_OK, -1));
         return new ModelAndView("/thredds/server/cdmvalidator/cdmValidate", model);
@@ -73,7 +77,7 @@ public class CdmValidatorController extends AbstractController {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("contextPath", request.getContextPath());
         model.put("servletPath", request.getServletPath());
-
+        
         this.cdmValidatorContext.getHtmlConfig().addHtmlConfigInfoToModel(model);
 
         log.info("handleRequestInternal(): " + UsageLog.closingMessageForRequestContext(HttpServletResponse.SC_OK, -1));

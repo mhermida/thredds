@@ -23,7 +23,7 @@
 022	ACMAD
 023	Mozambique NMC
 024	Pretoria (RSMC)
-025	La Réunion (RSMC)
+025	La Rï¿½union (RSMC)
 026	Khabarovsk (RSMC)
 027	)
 028	New Delhi (RSMC/RAFC)
@@ -44,7 +44,7 @@
 043	Brasilia (RSMC/RAFC)
 044	)
 045	Santiago
-046	Brazilian Space Agency ­ INPE
+046	Brazilian Space Agency ï¿½ INPE
 047	Colombia NMC
 048	Ecuador NMC
 049	Peru NMC
@@ -72,7 +72,7 @@
 071	Nadi (RSMC)
 072	Singapore
 073	Malaysia NMC
-074	UK Meteorological Office ­ Exeter (RSMC)
+074	UK Meteorological Office ï¿½ Exeter (RSMC)
 075	)
 076	Moscow (RSMC/RAFC)
 077	Reserved
@@ -80,7 +80,7 @@
 079	)
 080	Rome (RSMC)
 081	)
-082	Norrköping
+082	Norrkï¿½ping
 083	)
 084	Toulouse (RSMC)
 085	Toulouse (RSMC)
@@ -213,7 +213,7 @@
 212	Lisboa
 213	Reykjavik
 214	Madrid
-215	Zürich
+215	Zï¿½rich
 216	Service ARGOS Toulouse
 217	Bratislava
 218	Budapest

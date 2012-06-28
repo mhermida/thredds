@@ -5,7 +5,7 @@
   <parent>
     <groupId>edu.ucar</groupId>
     <artifactId>thredds-parent</artifactId>
-    <version>4.3.11-SNAPSHOT</version>
+    <version>4.3.12-SNAPSHOT</version>
   </parent>
 
   <!-- ===========================================================
@@ -163,7 +163,6 @@
                   <exclude>lucene:lucene</exclude>
                   <exclude>org.springframework:*</exclude>
                   <exclude>org.bounce:*</exclude>
-                  <exclude>org.slf4j:slf4j-jdk14</exclude>
                 </excludes>
               </artifactSet>
 
@@ -218,9 +217,9 @@
         <configuration>
           <skip>${skipTests}</skip>
           <testFailureIgnore>true</testFailureIgnore>
-          <includes>
+          <!-- includes>
             <include>ucar.util.prefs.TestAllPrefs.java</include>
-          </includes>
+          </includes -->
         </configuration>
       </plugin>      
 

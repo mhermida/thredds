@@ -22,7 +22,7 @@
       <h3>About the <code>manager</code> application</h3>
       <div id="note" class="info">
        <h4>More about <code>manager</code></h4>
-       <p>For more information about the Tomcat <code><small>manager</small></code> application, see the Tomcat <a href="http://tomcat.apache.org/tomcat-6.0-doc/manager-howto.html">Manager App HOW-TO</a> documentation.</p>
+       <p>For more information about the Tomcat <code><small>manager</small></code> application, see the Tomcat <a href="http://tomcat.apache.org/tomcat-7.0-doc/manager-howto.html">Manager App HOW-TO</a> documentation.</p>
       </div>
 
 
@@ -59,18 +59,13 @@
       <h3>Granting access to the <code>manager</code> application</h3>
 
        <ol>
-        <li>Modify <code>tomcat-users.xml</code> to add <code>role</code> and <code>user</code> elements.</li>
-         <p>Using your favorite editor, open <code><small>$TOMCAT_HOME/conf/tomcat-users.xml</small></code>:</p>
+        <li>Modify <code>tomcat-users.xml</code> to add a <code>user</code> element.</li>
+         <p>Using your favorite editor, open <code><small>${tomcat_home}/conf/tomcat-users.xml</small></code>:</p>
 <pre>
 <b>$</b> vi tomcat-users.xml
 </pre>   
-        <p>Between the <code><small>&lt;tomcat-users&gt;</small></code> tags, add a <code><small>role</small></code> element and specify the <code><small>rolename</small></code> attribute as <code><small>manager</small></code>:</p>
+        <p>The roles of &quot;manager-gui&quot;, &quot;manager-status&quot;, &quot;manager-script&quot;, and &quot;manager-jmx&quot; are pre-defined in Tomcat 7.</p>
           
-<pre>
-&lt;tomcat-users&gt;
-    &lt;role rolename="manager-gui"/&gt;
-&lt;/tomcat-users&gt;
-</pre>  
           <p>Now add a new user by adding a <code><small>user</small></code> element. Create a <code><small>username</small></code> and <code><small>password</small></code> for the new user and specify <code><small>manager-gui</small></code> as one of the <code><small>roles</small></code> (in this example we are creating a user called 'admin' with a corresponding password of 'secret'):</p>
 <pre>
 &lt;tomcat-users&gt;
@@ -128,7 +123,7 @@
       <ul>
         <li><b>The issue: </b> The "PermGen" error happens when the JVM runs out of memory in the permanent generation. (Default PermGen size differs among Sun JDK versions, but the upper limit is typically 64MB.)</li>
         <li><b>The cause: </b> Objects in the permanent generation are never garbage collected.  When redeploying your web application using the Tomcat <code><small>manager</small></code>  application, your WAR file is unpacked and parts of the class file definition are loaded into PermGen space, like string constants.</li>
-        <li><b>The symptom:</b> The PermGen error will manifest itself in a sluggish Tomcat <code><small>manager</small></code>  application that never completes a task, and the <code><small>java.lang.OutOfMemoryError: PermGen space failure</small></code>  error being displayed in <code><small>$TOMCAT_HOME/logs/catalina.out</small></code> </li>
+        <li><b>The symptom:</b> The PermGen error will manifest itself in a sluggish Tomcat <code><small>manager</small></code>  application that never completes a task, and the <code><small>java.lang.OutOfMemoryError: PermGen space failure</small></code>  error being displayed in <code><small>${tomcat_home}/logs/catalina.out</small></code> </li>
          <li><b>A temporary fix:</b> You can add the <code><small>-XX:MaxPermSize</small></code>  switch to <code><small>$JAVA_OPTS</small></code>  to increase the amount of memory allocated for the permanent generation,  However this is only postponed the inevitable, as even an increased memory in permanent generation will eventually fill up.  When this happens, you will need to stop/start Tomcat at this point. For this reason, you may want to restart Tomcat whenever you redeploy TDS or another webapp.</li>
        </ul>
 
@@ -151,7 +146,7 @@
 
       <div id="note" class="info">
        <h4>Tomcat Realms</h4>
-       <p>The Tomcat documentation contains a wealth of information about the different <a href="http://tomcat.apache.org/tomcat-6.0-doc/config/realm.html">Tomcat Realms</a>.</p>
+       <p>The Tomcat documentation contains a wealth of information about the different <a href="http://tomcat.apache.org/tomcat-7.0-doc/config/realm.html">Tomcat Realms</a>.</p>
       </div>
 
        <ul>
@@ -170,7 +165,7 @@
 <ol>
         <li>First we need to enable digest passwords support in Tomcat by modifying a couple of Tomcat Realms in the <code>server.xml</code> file in the Tomcat <code>conf/</code> directory. </li> 
 
-          <p>A <a href="http://tomcat.apache.org/tomcat-6.0-doc/config/realm.html">Tomcat Realm</a> represents a "database" of usernames, passwords, and roles assigned to tomcat users.</p>
+          <p>A <a href="http://tomcat.apache.org/tomcat-7.0-doc/config/realm.html">Tomcat Realm</a> represents a "database" of usernames, passwords, and roles assigned to tomcat users.</p>
 
           <table>
            <tr>
@@ -249,7 +244,7 @@
                  digest="SHA" /&gt;</b>
 </pre>  
     <li><a name="makeDigest"></a>Create a SHA encrypted version of your password.</li>
-     <p>Tomcat provides a script (<code><small>$TOMCAT_HOME/bin/digest.sh</small></code>) that will encrypt a password string according to the algorithm specified.  Use this script as follows with the password you made for yourself previously:</p>
+     <p>Tomcat provides a script (<code><small>${tomcat_home}/bin/digest.sh</small></code>) that will encrypt a password string according to the algorithm specified.  Use this script as follows with the password you made for yourself previously:</p>
 
 <pre>
 <b>$</b> /home/tds/apache-tomcat-6.0.32/bin/digest.sh -a SHA secret
@@ -344,9 +339,9 @@ secret:e5e9fa1ba31ecd1ae84f75caaa474f3a663f05f4
     
        <li><a name="enableSSL"></a>Configure Tomcat to enable SSL and use the self-signed certificate.</li>
        <div id="expanded" class="question">
-        <p>Based on what we know about Tomcat configuration, which file in <code><small>$TOMCAT_HOME/conf</small></code> should we edit to to enable SSL?</p>
+        <p>Based on what we know about Tomcat configuration, which file in <code><small>${tomcat_home}/conf</small></code> should we edit to to enable SSL?</p>
        </div>
-        <p>Open <code><small>$TOMCAT_HOME/conf/server.xml</small></code> with your favorite editor:</p>
+        <p>Open <code><small>${tomcat_home}/conf/server.xml</small></code> with your favorite editor:</p>
 
 <pre>
 <b>$</b> vi server.xml
@@ -389,8 +384,8 @@ secret:e5e9fa1ba31ecd1ae84f75caaa474f3a663f05f4
 
         <p>Restart Tomcat:</p>
 <pre>
-<b>$</b> $TOMCAT_HOME/bin/shutdown.sh
-<b>$</b> $TOMCAT_HOME/bin/startup.sh
+<b>$</b> ${tomcat_home}/bin/shutdown.sh
+<b>$</b> ${tomcat_home}/bin/startup.sh
 </pre>
 
         <p>Verify Tomcat is listening on port 8443 by running the <code><small>netstat</small></code> command:</p>
@@ -436,7 +431,7 @@ tcp        0      0 127.0.0.1:<b>8443</b>               0.0.0.0:*               
        <h3>Exercise Four: <a name="grantAccess"></a>Grant yourself access to the TDS remote management tool</h3>
        <ol>
         <li>Using the steps outlined above, create a self-signed certificate and enable SSL in Tomcat.</li>
-        <li>Modify <code><small>$TOMCAT_HOME/conf/tomcat-users.xml</small></code> to add a new role with the rolename attribute of <code><small>tdsConfig</small></code>, and add this role to your list of roles:</li>
+        <li>Modify <code><small>${tomcat_home}/conf/tomcat-users.xml</small></code> to add a new role with the rolename attribute of <code><small>tdsConfig</small></code>, and add this role to your list of roles:</li>
 <pre>
 &lt;tomcat-users&gt;
     &lt;role rolename="manager"/&gt;
@@ -456,7 +451,7 @@ tcp        0      0 127.0.0.1:<b>8443</b>               0.0.0.0:*               
        <p>How did Tomcat know to use SSL for the TDS remote management tool?</p>
       </div>
       <div id="expanded" class="question">
-       <p>Where, in any of the configuration changes you made to <code><small>$TOMCAT_HOME/conf/server.xml</small></code> or <code><small>$TOMCAT_HOME/conf/tomcat-users.xml</small></code>, did you explicitly specify that TDS remote management tool <i>must</i> be accessed via SSL?</p>       
+       <p>Where, in any of the configuration changes you made to <code><small>${tomcat_home}/conf/server.xml</small></code> or <code><small>${tomcat_home}/conf/tomcat-users.xml</small></code>, did you explicitly specify that TDS remote management tool <i>must</i> be accessed via SSL?</p>
       </div>
      </div> <!-- end subsection -->
 
@@ -479,7 +474,7 @@ tcp        0      0 127.0.0.1:<b>8443</b>               0.0.0.0:*               
  
         <ol>
          <li>Have a look at the deployment descriptor that comes with the TDS.</li>
-          <p>Navigate to the unpacked <code><small>thredds</small></code> directory in <code><small>$TOMCAT_HOME/webapps</small></code>, and view the file: </p>
+          <p>Navigate to the unpacked <code><small>thredds</small></code> directory in <code><small>${tomcat_home}/webapps</small></code>, and view the file: </p>
 <pre>
 <b>$</b> cd /home/tds/tds/apache-tomcat-6.0.32/webapps/thredds
 <b>$</b> less WEB-INF/web.xml
@@ -646,7 +641,7 @@ tcp        0      0 127.0.0.1:<b>8443</b>               0.0.0.0:*               
 
      <div id="subsection">
       <h3>Additional resources</h3>
-     <p>We have compiled a list of a few <a href="AdditionalSecurityConfiguration.html">additional step</a> you should take to help secure Tomcat and your TDS server. This is not a complete laundry list of security fixes! Please use it as a starting point when securing your server.</p>
+     <p>We have compiled a list of a few <a href="AdditionalSecurityConfiguration.html">additional steps</a> you should take to help secure Tomcat and your TDS server. This is not a complete laundry list of security fixes! Please use it as a starting point when securing your server.</p>
   </div> <!-- end subsection -->
    </div> <!-- end Additional Resources section -->
 
@@ -657,12 +652,12 @@ tcp        0      0 127.0.0.1:<b>8443</b>               0.0.0.0:*               
 
 
 
-   <p><img src="../../images/thread.png" height="60" alt="THREDDS" valign="top" align="left" vspace="0" hspace="10" />  This document is maintained by Unidata.  Send comments to <a href="mailto:support-thredds@unidata.ucar.edu">THREDDS support</a>.</p>
+   <p>
+   <hr width="100%">
+   <address><img alt="THREDDS" src="../../images/thread.png" height="108" width="110">This document is maintained by Unidata staff.
+       Please send comments to <a href="mailto:support-thredds@unidata.ucar.edu">THREDDS support</a>.
+   </address>
 
-   
-<script language="JavaScript" type="text/JavaScript">
-    document.write(date_modified);
-</script> 
   </body>
  </html>   
 

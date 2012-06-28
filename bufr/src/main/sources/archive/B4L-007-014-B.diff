@@ -842,7 +842,7 @@
 0; 60; 144; 0; 0; 7; %; Probability of snow amount = 0.1" (> trace) during past 24 hours
 0; 60; 145; 0; 0; 7; %; Probability of snow amount = 8" during past 24 hours
 0; 60; 146; 0; 0; 7; %; Probability of liquid equivalent precipitation > 3.00 inches, past 24 hours
-0; 60; 147; 1; -1; 14; kg/m³; Conditional expected precipitation amount
+0; 60; 147; 1; -1; 14; kg/mï¿½; Conditional expected precipitation amount
 0; 60; 148; 0; 0; 7; %; Probability of precipitation occurrence
 0; 60; 149; 0; 0; 7; %; Probability of precipitation occurrence last 3 hrs
 0; 60; 150; 0; 0; 7; %; Unconditional probability of severe weather during past 6 hrs
@@ -880,7 +880,7 @@
 0; 60; 203; 0; 0; 7; %; Conditional probability of visibility < 3 miles
 0; 60; 204; 0; 0; 7; %; Conditional probability of visibility < 5 miles
 0; 60; 205; 0; 0; 7; %; Conditional probability of visibility < 6 miles
-0; 60; 210; 0; 0; 7; %; Probability of fog with visibility = ¼ mile, past 3 hrs
+0; 60; 210; 0; 0; 7; %; Probability of fog with visibility = ï¿½ mile, past 3 hrs
 0; 60; 220; 0; 0; 7; %; Conditional probability of thunderstorm, past 3 hrs
 0; 60; 221; 0; 0; 7; %; Conditional probability of severe weather, past 3 hrs
 0; 60; 222; 0; 0; 7; %; Unconditional probability of thunderstorm, past 3 hrs

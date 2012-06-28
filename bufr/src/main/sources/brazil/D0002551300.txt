@@ -614,7 +614,7 @@
  302034 003 007032 Precipitation past 24 hours
             013023
             007032
- 302035 023 007032 Basic synoptic “instantaneous” data 	
+ 302035 023 007032 Basic synoptic ï¿½instantaneousï¿½ data 	
             012101
             012103
             013003

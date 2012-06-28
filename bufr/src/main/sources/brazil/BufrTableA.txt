@@ -1,5 +1,5 @@
-000 Surface data — land
-001 Surface data — sea
+000 Surface data ï¿½ land
+001 Surface data ï¿½ sea
 002 Vertical soundings (other than satellite)
 003 Vertical soundings (satellite)
 004 Single level upper-air data (other than satellite)

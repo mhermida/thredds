@@ -12,13 +12,12 @@ import java.util.Formatter;
 import ucar.unidata.test.util.TestDir;
 import ucar.unidata.util.StringUtil2;
 
-
 public class TestNetcdfStream {
   String serverRoot = TestDir.cdmUnitTestDir + "formats";
 
   @Test
-  public void testProblem() throws IOException {
-    doOne(serverRoot+"/netcdf4/tst/tst_enums.nc");
+  public void utestProblem() throws IOException {
+    doOne(serverRoot+"/netcdf4/vlenBigEndian.nc");
   }
 
   @Test
@@ -73,12 +72,12 @@ public class TestNetcdfStream {
   void doOne(String filename) throws IOException {
     String name = StringUtil2.substitute(filename.substring(serverRoot.length()), "\\", "/");
     String remote = "http://localhost:8081/thredds/cdmremote/testCdmremote" + name;
-    System.out.printf("%s%n", filename);
+    System.out.printf("---------------------------\n");
+    System.out.printf("TEST %s and %s%n", filename, remote);
     compare(filename, remote);
   }
 
   void compare(String file, String remote) throws IOException {
-    System.out.printf("---------------------------\n");
     NetcdfFile ncfile = NetcdfDataset.openFile(file, null);
     NetcdfFile ncfileRemote = new CdmRemote(remote);
 

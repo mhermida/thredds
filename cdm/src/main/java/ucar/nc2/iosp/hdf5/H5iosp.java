@@ -32,6 +32,7 @@
  */
 package ucar.nc2.iosp.hdf5;
 
+import thredds.catalog.DataFormatType;
 import ucar.ma2.*;
 
 import ucar.nc2.time.CalendarDate;
@@ -88,7 +89,7 @@ public class H5iosp extends AbstractIOServiceProvider {
 
   public String getFileTypeId() {
     if (isEos) return "HDF5-EOS";
-    return "HDF5";
+    return DataFormatType.HDF5.toString();
   }
 
   public String getFileTypeDescription() {
@@ -452,7 +453,7 @@ public class H5iosp extends AbstractIOServiceProvider {
   public Object sendIospMessage(Object message) {
     if (message.toString().equals("header"))
       return headerParser;
-    
+
     if (message.toString().equals("headerEmpty")) {
       NetcdfFile ncfile = new FakeNetcdfFile();
       H5header headerEmpty = new H5header(myRaf, ncfile, this);
@@ -460,6 +461,10 @@ public class H5iosp extends AbstractIOServiceProvider {
     }
 
     return super.sendIospMessage(message);
+  }
+
+  NetcdfFile getNetcdfFile() {
+    return headerParser.ncfile;
   }
 
 }

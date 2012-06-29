@@ -32,19 +32,20 @@
  */
 package thredds.server.root;
 
-import org.springframework.web.servlet.mvc.AbstractController;
-import org.springframework.web.servlet.mvc.LastModified;
-import org.springframework.web.servlet.ModelAndView;
+import java.io.File;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import thredds.servlet.UsageLog;
-import thredds.server.config.TdsContext;
-import thredds.util.TdsPathUtils;
-import thredds.util.RequestForwardUtils;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.AbstractController;
+import org.springframework.web.servlet.mvc.LastModified;
 
-import java.io.File;
+import thredds.server.config.TdsContext;
+import thredds.servlet.ServletContextUtil;
+import thredds.servlet.UsageLog;
+import thredds.util.RequestForwardUtils;
+import thredds.util.TdsPathUtils;
 
 /**
  * _more_
@@ -81,7 +82,8 @@ public class RootController extends AbstractController implements LastModified
     File file = tdsContext.getPublicDocFileSource().getFile( path );
     if ( file == null )
     {
-      RequestForwardUtils.forwardRequest( path, tdsContext.getDefaultRequestDispatcher(), req, res );
+      //RequestForwardUtils.forwardRequest( path, tdsContext.getDefaultRequestDispatcher(), req, res );
+      RequestForwardUtils.forwardRequest( path, ServletContextUtil.getDefaultRequestDispatcher(), req, res );
       return null;
     }
     log.info( "handleRequestInternal(): " + UsageLog.closingMessageForRequestContext( HttpServletResponse.SC_OK, -1 ) );

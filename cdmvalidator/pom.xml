@@ -26,17 +26,18 @@
            Dependencies
        =========================================================== -->
   <dependencies>
-    <!-- dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>tds</artifactId>
-      <type>war</type>
-    </dependency-->
     
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>tds</artifactId>
       <type>jar</type>
       <classifier>classes</classifier>
+      <!-- exclusions>
+      	<exclusion>
+      		<groupId>EDS</groupId>
+      		<artifactId>threddsIso</artifactId>
+      	</exclusion>
+      </exclusions-->
     </dependency>
 
 
@@ -49,18 +50,59 @@
 
   <build>
     <finalName>cdmvalidator</finalName>
-	<resources>
-      <resource>
-        <directory>${basedir}/src/main/resources</directory>
-        <filtering>true</filtering>
-     </resource>
-    </resources>    
+    
+  <!-- resources>
+    <resource>
+      <filtering>true</filtering>
+      <directory>${basedir}/src/main/template</directory>
+      <includes>
+        <include>**/*.properties</include>
+      </includes>
+    </resource>
+  </resources-->
+        
     <plugins>
+    
+      <plugin>
+      	<artifactId>maven-resources-plugin</artifactId>
+      	<version>2.5</version>
+      	<executions>
+      		<execution>
+      			<id>copy-resources</id>
+      			<phase>package</phase>
+      			<goals>
+      				<goal>copy-resources</goal>
+      			</goals>      			
+      			<configuration>
+      				<outputDirectory>${basedir}/target/classes/</outputDirectory>
+      				<resources>
+      					<resource>
+      						<directory>${basedir}/target/cdmvalidator/WEB-INF/classes/</directory>
+      						<filtering>false</filtering>
+              				<includes>
+                				<include>**/cdmvalidator.properties</include>
+                				<include>**/tds.properties</include>
+              				</includes>      						
+      					</resource>
+      				</resources>
+      			</configuration>
+      		</execution>
+      	</executions>
+      </plugin>
+    
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
+        <!-- version>2.1.1</version-->
         <configuration>
-          <attachClasses>true</attachClasses>        
+          <attachClasses>true</attachClasses>
+          <packagingExcludes>
+            WEB-INF/lib/commons-logging*.jar,
+            WEB-INF/lib/javax.servlet*.jar,
+            WEB-INF/lib/jdom-1.0.jar,
+            WEB-INF/lib/slf4j-jdk14*.jar,
+            WEB-INF/lib/visad-*.jar
+          </packagingExcludes>
           <archive>
             <manifest>
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
@@ -69,41 +111,18 @@
               <Built-On>${maven.build.timestamp}</Built-On>
             </manifestEntries>
           </archive>
-          
           <webResources>
             <resource>
               <targetPath>WEB-INF/classes</targetPath>
               <filtering>true</filtering>
               <directory>${basedir}/src/main/template</directory>
               <includes>
-                <include>**/*.properties</include>
+                <include>**/cdmvalidator.properties</include>
+                <include>**/tds.properties</include>
               </includes>
             </resource>
-          </webResources>          
-          
-          <!-- workDirectory>target/overlay-war-folder</workDirectory>                              
-          <overlays>
-          	<overlay>
-				<groupId>${project.groupId}</groupId>				
-      			<artifactId>tds</artifactId>
-      			<excludes>
-      			    <exclude>WEB-INF/classes/thredds/server/*.properties</exclude>
-      			    <exclude>WEB-INF/classes/thredds/server/cdmvalidator/**</exclude>
-      				<exclude>WEB-INF/jsp/**</exclude>
-      				<exclude>WEB-INF/palettes/**</exclude>
-      				<exclude>WEB-INF/taglib/**</exclude>
-      				<exclude>WEB-INF/tags/**</exclude>
-      				<exclude>WEB-INF/tld/**</exclude>
-      				<exclude>WEB-INF/views/**</exclude>
-      				<exclude>WEB-INF/xsl/**</exclude>
-      				<exclude>WEB-INF/*.xml</exclude>
-      				<exclude>godiva2/**</exclude>
-      				<exclude>docs/**</exclude>
-      				<exclude>WEB-INF/lib/*.jar</exclude>
-      			</excludes>
-          	</overlay>
-          </overlays-->
-
+            
+          </webResources>
         </configuration>
       </plugin>
 

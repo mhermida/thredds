@@ -32,31 +32,32 @@
  */
 package thredds.server.catalogservice;
 
-import org.springframework.web.servlet.mvc.AbstractController;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
-
-import thredds.catalog.util.DeepCopyUtils;
-import thredds.servlet.DataRootHandler;
-import thredds.servlet.HtmlWriter;
-import thredds.servlet.UsageLog;
-import thredds.server.config.TdsContext;
-import thredds.catalog.InvCatalog;
-import thredds.catalog.InvCatalogImpl;
-import thredds.catalog.InvDatasetImpl;
-import thredds.catalog.InvDataset;
-import thredds.util.RequestForwardUtils;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.AbstractController;
+
+import thredds.catalog.InvCatalog;
+import thredds.catalog.InvCatalogImpl;
+import thredds.catalog.InvDataset;
+import thredds.catalog.InvDatasetImpl;
+import thredds.catalog.util.DeepCopyUtils;
+import thredds.server.config.TdsContext;
+import thredds.servlet.DataRootHandler;
+import thredds.servlet.HtmlWriter;
+import thredds.servlet.ServletContextUtil;
+import thredds.servlet.UsageLog;
+import thredds.util.RequestForwardUtils;
 
 /**
  * Handle all requests for local catalog access and services. Supported
@@ -292,8 +293,8 @@ public class LocalCatalogServiceController extends AbstractController
     }
 
     // If request doesn't match a public document, forward to default dispatcher.
-    RequestForwardUtils.forwardRequest( path, tdsContext.getDefaultRequestDispatcher(),
-                                        request, response );
+    //RequestForwardUtils.forwardRequest( path, tdsContext.getDefaultRequestDispatcher(), request, response );
+    RequestForwardUtils.forwardRequest( path, ServletContextUtil.getDefaultRequestDispatcher(), request, response );
     return null;
   }
 }

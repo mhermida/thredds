@@ -56,7 +56,7 @@
    * -->
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>classpath:applicationContext-cdmValidatorConfig.xml</param-value>
+    <param-value>/WEB-INF/applicationContext-cdmValidatorConfig.xml</param-value>
   </context-param>
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -73,7 +73,7 @@
     <load-on-startup>0</load-on-startup>
     <init-param>
     	<param-name>contextConfigLocation</param-name>
-    	<param-value>/WEB-INF/classes/cdmvalidator-servlet.xml</param-value>
+    	<param-value>/WEB-INF/cdmvalidator-servlet.xml</param-value>
     </init-param>
   </servlet>
 

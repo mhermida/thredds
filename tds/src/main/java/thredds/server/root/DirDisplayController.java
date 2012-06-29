@@ -32,19 +32,20 @@
  */
 package thredds.server.root;
 
-import org.springframework.web.servlet.mvc.AbstractController;
-import org.springframework.web.servlet.ModelAndView;
+import java.io.File;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import thredds.servlet.HtmlWriter;
-import thredds.servlet.UsageLog;
-import thredds.servlet.DataRootHandler;
-import thredds.server.config.TdsContext;
-import thredds.util.RequestForwardUtils;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.AbstractController;
 
-import java.io.File;
+import thredds.server.config.TdsContext;
+import thredds.servlet.DataRootHandler;
+import thredds.servlet.HtmlWriter;
+import thredds.servlet.ServletContextUtil;
+import thredds.servlet.UsageLog;
+import thredds.util.RequestForwardUtils;
 
 /**
  * Handle /admin/content/
@@ -104,7 +105,8 @@ public class DirDisplayController extends AbstractController {
     }
 
     if (file == null) {
-      RequestForwardUtils.forwardRequest( path, tdsContext.getDefaultRequestDispatcher(), req, res );
+      //RequestForwardUtils.forwardRequest( path, tdsContext.getDefaultRequestDispatcher(), req, res );
+    	RequestForwardUtils.forwardRequest( path, ServletContextUtil.getDefaultRequestDispatcher(), req, res );
       return null;
     }
 

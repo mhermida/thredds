@@ -38,24 +38,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import org.springframework.web.context.ServletContextAware;
-import org.springframework.web.util.Log4jWebConfigurer;
 
 import thredds.catalog.InvDatasetFeatureCollection;
 import thredds.catalog.InvDatasetScan;
+import thredds.servlet.ServletContexProvider;
+import thredds.servlet.ServletContextUtil;
 import thredds.servlet.ServletUtil;
 import thredds.servlet.ThreddsConfig;
-import thredds.servlet.UsageLog;
 import thredds.util.filesource.BasicDescendantFileSource;
 import thredds.util.filesource.BasicWithExclusionsDescendantFileSource;
 import thredds.util.filesource.ChainedFileSource;
@@ -79,8 +76,9 @@ import ucar.unidata.util.StringUtil2;
  * @since 4.0
  */
 @Component
-public final class TdsContext implements ServletContextAware, InitializingBean {
-
+@DependsOn(value="servletContexProvider")
+//public final class TdsContext implements ServletContextAware, InitializingBean {
+public final class TdsContext implements InitializingBean {
 //  ToDo Once Log4j config is called by Spring listener instead of ours, use this logger instead of System.out.println.
 //  private org.slf4j.Logger logServerStartup =
 //          org.slf4j.LoggerFactory.getLogger( "serverStartup" );
@@ -139,8 +137,8 @@ public final class TdsContext implements ServletContextAware, InitializingBean {
   private FileSource configSource;
   private FileSource publicDocSource;
 
-  private RequestDispatcher defaultRequestDispatcher;
-  private RequestDispatcher jspRequestDispatcher;
+  //private RequestDispatcher defaultRequestDispatcher;
+  //private RequestDispatcher jspRequestDispatcher;
 
   @Autowired
   private HtmlConfig htmlConfig;
@@ -151,7 +149,7 @@ public final class TdsContext implements ServletContextAware, InitializingBean {
   @Autowired
   private WmsConfig wmsConfig;
   
-  private ServletContext servletContext;
+  //private ServletContext servletContext;
 
   private TdsContext() {}
 
@@ -205,26 +203,29 @@ public final class TdsContext implements ServletContextAware, InitializingBean {
   public void afterPropertiesSet(){
 
     // ToDo Instead of stdout, use servletContext.log( "...") [NOTE: it writes to localhost.*.log rather than catalina.out].
-    if ( servletContext == null )
-      throw new IllegalArgumentException( "ServletContext must not be null.");
+    //if ( servletContext == null )
+     // throw new IllegalArgumentException( "ServletContext must not be null.");
 
     // ToDo LOOK - Are we still using this.
-    ServletUtil.initDebugging( servletContext );
+    //ServletUtil.initDebugging( servletContext );
 
     // Set the webapp name.
-    this.webappName = servletContext.getServletContextName();
-
+    //this.webappName = servletContext.getServletContextName();
+	  this.webappName = ServletContextUtil.getWebAppName();
+	  
     // Set the context path.
     // Servlet 2.5 allows the following.
     //contextPath = servletContext.getContextPath();
-    String tmpContextPath = servletContext.getInitParameter( "ContextPath" );  // cannot be overridden in the ThreddsConfig file
+    //String tmpContextPath = servletContext.getInitParameter( "ContextPath" );  // cannot be overridden in the ThreddsConfig file
+	String tmpContextPath = ServletContextUtil.getContextPath(); 
     if ( tmpContextPath == null ) tmpContextPath = "thredds";
     contextPath = "/" + tmpContextPath;
     // ToDo LOOK - Get rid of need for setting contextPath in ServletUtil.
     ServletUtil.setContextPath( contextPath );
 
     // Set the root directory and source.
-    String rootPath = servletContext.getRealPath( "/" );
+    //String rootPath = servletContext.getRealPath( "/" );
+    String rootPath = ServletContextUtil.getRootPath();
     if ( rootPath == null )
     {
       String msg = "Webapp [" + this.webappName + "] must run with exploded deployment directory (not from .war).";
@@ -337,9 +338,11 @@ public final class TdsContext implements ServletContextAware, InitializingBean {
 
     // LOOK Remove log4j init JC 6/13/2012
     // which is used in log4j.xml file loaded here.
-    Log4jWebConfigurer.initLogging( servletContext );
-    logServerStartup.info( "TdsConfigContextListener.contextInitialized() start[2]: " + UsageLog.setupNonRequestContext() );
-    logServerStartup.info( "TdsContext.init()  intializating logging..." + UsageLog.setupNonRequestContext() );
+    
+    //Moved to ServletContextUtil... 
+    //Log4jWebConfigurer.initLogging( servletContext );
+    //logServerStartup.info( "TdsConfigContextListener.contextInitialized() start[2]: " + UsageLog.setupNonRequestContext() );
+    //logServerStartup.info( "TdsContext.init()  intializating logging..." + UsageLog.setupNonRequestContext() );
     
 
     // read in persistent user-defined params from threddsConfig.xml
@@ -402,8 +405,8 @@ public final class TdsContext implements ServletContextAware, InitializingBean {
     InvDatasetFeatureCollection.setContext( contextPath );
     // GridServlet.setContextPath( contextPath ); // Won't need when switch GridServlet to use Swing MVC and TdsContext
 
-    jspRequestDispatcher = servletContext.getNamedDispatcher( "jsp" );
-    defaultRequestDispatcher = servletContext.getNamedDispatcher( "default" );
+    //jspRequestDispatcher = servletContext.getNamedDispatcher( "jsp" );
+    //defaultRequestDispatcher = servletContext.getNamedDispatcher( "default" );
 
     TdsConfigMapper tdsConfigMapper = new TdsConfigMapper();
     tdsConfigMapper.setTdsServerInfo( this.serverInfo );
@@ -519,25 +522,25 @@ public final class TdsContext implements ServletContextAware, InitializingBean {
     return this.publicDocSource;
   }
 
-  public RequestDispatcher getDefaultRequestDispatcher()
+/*  public RequestDispatcher getDefaultRequestDispatcher()
   {
     return this.defaultRequestDispatcher;
   }
   public RequestDispatcher getJspRequestDispatcher()
   {
     return this.jspRequestDispatcher;
-  }
+  }*/
 
-@Override
-public void setServletContext(ServletContext servletContext) {
+//@Override
+//public void setServletContext(ServletContext servletContext) {
 	
-	this.servletContext = servletContext;
+//	this.servletContext = servletContext;
 	
-}
+//}
 
-public ServletContext getServletContext(){
-	return this.servletContext; 
-}
+//public ServletContext getServletContext(){
+//	return this.servletContext; 
+//}
 
 
 }

@@ -8,8 +8,17 @@
 							http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
 							http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
 
+
+  <!-- Enables the Spring MVC @Controller programming model  -->
+  <mvc:annotation-driven />
+  
+  <!-- Handler Mapping -->
+  <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
   <!-- enabling component-scan in Spring for annotated wirings --> 
   <context:component-scan base-package="thredds"/>
+  
+  
+  
 
   <bean id="cdmValidatorContext" class="thredds.server.cdmvalidator.CdmValidatorContext">
     <property name="webappVersion" value="${cdmvalidator.version}"/>
@@ -40,5 +49,14 @@
       </list>
     </property>
   </bean>
+
+ <!-- We must get rid of this!!! -->
+ <bean id="serverInfo" class="thredds.server.config.TdsServerInfo" />
+ 
+ <bean id="wmsConfig" class="thredds.server.config.WmsConfig" />
+ 
+ <!-- empty dataRootAliasExpanders --> 	  
+ <util:map id="dataRootLocationAliasExpanders" map-class="java.util.HashMap">
+ </util:map>  
 
 </beans>

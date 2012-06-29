@@ -1,6 +1,5 @@
 /*
- * Copyright 1998-2009 University Corporation for Atmospheric Research/Unidata
- *
+ * Copyright (c) 1998 - 2012. University Corporation for Atmospheric Research/Unidata
  * Portions of this software were developed by the Unidata Program at the
  * University Corporation for Atmospheric Research.
  *
@@ -30,43 +29,36 @@
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
  * WITH THE ACCESS, USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-package thredds.server.root;
+package thredds.servlet;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletContext;
 
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
-
-import thredds.server.config.TdsContext;
-import thredds.servlet.ServletContextUtil;
-import thredds.util.RequestForwardUtils;
-import thredds.util.TdsPathUtils;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.ServletContextAware;
 
 /**
- * _more_
- *
- * @author edavis
- * @since 4.0
+ * 
+ * @author mhermida
+ * 
  */
-public class JspController extends AbstractController
-{
-//  private static org.slf4j.Logger log =
-//          org.slf4j.LoggerFactory.getLogger( JspController.class );
 
-  private TdsContext tdsContext;
+@Component
+public final class ServletContexProvider implements ServletContextAware{
+	
+	private ServletContexProvider(){}
+	
+		
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.springframework.web.context.ServletContextAware#setServletContext
+	 * (javax.servlet.ServletContext)
+	 */
+	@Override
+	public void setServletContext(ServletContext servletContext) {
+		ServletContextUtil.setServletContext(servletContext);
+	}
 
-  public void setTdsContext( TdsContext tdsContext )
-  {
-    this.tdsContext = tdsContext;
-  }
 
-  protected ModelAndView handleRequestInternal( HttpServletRequest req, HttpServletResponse res )
-          throws Exception
-  {
-    String path = TdsPathUtils.extractPath( req );
-    //RequestForwardUtils.forwardRequest( path, tdsContext.getJspRequestDispatcher(), req, res );
-    RequestForwardUtils.forwardRequest( path, ServletContextUtil.getJspRequestDispatcher(), req, res );
-    return null;
-  }
 }

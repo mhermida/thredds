@@ -30,7 +30,6 @@ import thredds.server.ncSubset.params.PointDataRequestParamsBean;
 import thredds.server.ncSubset.params.RequestParamsBean;
 import thredds.server.ncSubset.util.NcssRequestUtils;
 import thredds.server.ncSubset.view.PointDataStream;
-import thredds.servlet.UsageLog;
 import ucar.nc2.dataset.CoordinateAxis1D;
 import ucar.nc2.dt.GridCoordSystem;
 import ucar.nc2.dt.GridDataset;
@@ -74,20 +73,21 @@ class PointDataController extends AbstratNcssDataRequestController{
 			PointDataStream pds = PointDataStream.createPointDataStream(  sf, response.getOutputStream() );
 			
 			boolean allWritten=false;
-						
+			
+			
+			setResponseHeaders(response, pds.getHttpHeaders(getGridDataset()) );
+			
 			allWritten = pds.stream( getGridDataset(), point, wantedDates, groupVars, params.getVertCoord());
 										
 			if(allWritten){				
-				setResponseHeaders(response, pds.getHttpHeaders() );
+
 				response.flushBuffer();
 				response.getOutputStream().close();
 				response.setStatus(HttpServletResponse.SC_OK);
-				log.info(UsageLog.closingMessageForRequestContext(HttpServletResponse.SC_OK, -1));
-				
+
 			}else{
 				//Something went wrong...
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-				log.info(UsageLog.closingMessageForRequestContext(HttpServletResponse.SC_INTERNAL_SERVER_ERROR , -1));				
 			}
 		}	
 	}

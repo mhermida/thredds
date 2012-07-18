@@ -1,16 +1,17 @@
 package ucar.nc2.jni.netcdf;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Formatter;
+
 import org.junit.Test;
+
 import ucar.nc2.Attribute;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
 import ucar.nc2.util.CompareNetcdf2;
 import ucar.unidata.io.RandomAccessFile;
 import ucar.unidata.test.util.TestDir;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Formatter;
 
 /**
  * Describe

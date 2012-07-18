@@ -321,7 +321,7 @@ public final class DataRootHandler implements InitializingBean{
     this.initCatalogs(catList);
   }
 
-  public synchronized void initCatalogs(List<String> configCatalogRoots) {
+  public synchronized void initCatalogs(List<String> configCatalogRoots){
     // Notify listeners of start of initialization if not reinit (in which case it is already done).
     if (!isReinit)
       for (ConfigListener cl : configListeners)

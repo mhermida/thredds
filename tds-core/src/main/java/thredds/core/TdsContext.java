@@ -22,11 +22,13 @@ public class TdsContext implements InitializingBean{
 	static private Logger log = LoggerFactory.getLogger(TdsContext.class);
 
 	/*
-	 * thredds directory within the context directory. It contains all the config files
+	 * thredds directory within the context directory. It contains all the configuration files:
+	 *  - threddsConfig.xml
+	 *    
 	 */
 	private static final String TDS_CONTEXT_DIRECTORY = "thredds";
 
-	/*""
+	/*
 	 * thredds public directory.
 	 */	
 	private static final String TDS_PUBLIC_DIRECTORY = TDS_CONTEXT_DIRECTORY+"/public";	
@@ -44,7 +46,40 @@ public class TdsContext implements InitializingBean{
 	private Path contextStartup;
 	
 	public void afterPropertiesSet(){
+		
+		createContext();
 
+	}
+
+	public String getContextRootPath(){
+		return contextRootPathStr;
+	}
+
+	public String getContextDirectory(){
+		return  Paths.get(contextRootPathStr+"/"+TDS_CONTEXT_DIRECTORY).toAbsolutePath().toString();
+	}
+	
+	public String getPublicDocFileDirectory(){
+		
+		return Paths.get(getContextRootPath()+"/"+TDS_PUBLIC_DIRECTORY).toAbsolutePath().toString();
+	}
+	
+	public File getFileInContext(String relPath) throws FileNotFoundException{
+		Path filePath = Paths.get(relPath);
+		filePath = contextRootPath.resolve(filePath);
+		if( !Files.exists(filePath) )
+			throw new FileNotFoundException();
+		
+		return filePath.toAbsolutePath().toFile();
+	}
+	
+	public String getContextPath(){
+		return TDS_CONTEXT_DIRECTORY;
+	}
+	
+	
+	private void createContext(){
+		
 		contextRootPath = Paths.get(contextRootPathStr+"/"+TDS_CONTEXT_DIRECTORY);
 		contextStartup = Paths.get(contextStartupPathStr);	
 
@@ -71,36 +106,8 @@ public class TdsContext implements InitializingBean{
 			
 		} catch (FileNotFoundException e) {
 			log.error("Config file: "+configFilePathStr+" not found");		
-		}
-	}
-
-	public String getContextRootPath(){
-		return contextRootPathStr;
-	}
-
-	public String getContextDirectory(){
-		return  Paths.get(contextRootPathStr+"/"+TDS_CONTEXT_DIRECTORY).toAbsolutePath().toString();
-	}
-	
-	public String getPublicDocFileDirectory(){
+		}		
 		
-		//Path publicPath = Paths.get( TDS_PUBLIC_DIRECTORY );
-		//Path contextPath = Paths.get( getContextDirectory() );				
-		//return Paths.get( TDS_PUBLIC_DIRECTORY ).toAbsolutePath().normalize().toString();
-		return Paths.get(getContextRootPath()+"/"+TDS_PUBLIC_DIRECTORY).toAbsolutePath().toString();
-	}
-	
-	public File getFileInContext(String relPath) throws FileNotFoundException{
-		Path filePath = Paths.get(relPath);
-		filePath = contextRootPath.resolve(filePath);
-		if( !Files.exists(filePath) )
-			throw new FileNotFoundException();
-		
-		return filePath.toAbsolutePath().toFile();
-	}
-	
-	public String getContextPath(){
-		return TDS_CONTEXT_DIRECTORY;
 	}
 	
 	private void copyStartupContent(final Path sourceDir, final Path destDir) throws IOException{

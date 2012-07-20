@@ -172,13 +172,7 @@ public final class DataRootHandler implements InitializingBean {
 				cl.configStart();
 		isReinit = false;
 
-		staticCache = ThreddsConfig.getBoolean("Catalog.cache", true); // user
-		// can
-		// turn
-		// off
-		// static
-		// catalog
-		// caching
+		staticCache = ThreddsConfig.getBoolean("Catalog.cache", true); // user can turn off static catalog caching
 		log.info("DataRootHandler: staticCache= " + staticCache);
 
 		this.staticCatalogNames = new HashSet<String>();
@@ -187,12 +181,10 @@ public final class DataRootHandler implements InitializingBean {
 		for (String path : configCatalogRoots) {
 			try {
 				path = StringUtils.cleanPath(path);
-				log.info("\n**************************************\nCatalog init "
-						+ path + "\n[" + CalendarDate.present() + "]");
+				log.info("\n**************************************\nCatalog init "+ path + "\n[" + CalendarDate.present() + "]");
 				initCatalog(path, true, true);
 			} catch (Throwable e) {
-				log.error("initCatalogs(): Error initializing catalog " + path
-						+ "; " + e.getMessage(), e);
+				log.error("initCatalogs(): Error initializing catalog " + path	+ "; " + e.getMessage(), e);
 			}
 		}
 
@@ -238,10 +230,7 @@ public final class DataRootHandler implements InitializingBean {
 
 		// read it
 		InvCatalogFactory factory = this.getCatalogFactory(true); // always
-		// validate
-		// the
-		// config
-		// catalogs
+		// validate the config catalogs
 		InvCatalogImpl cat = readCatalog(factory, path, f.getPath());
 		if (cat == null) {
 			log.warn("initCatalog(): failed to read catalog <" + f.getPath()
@@ -265,7 +254,7 @@ public final class DataRootHandler implements InitializingBean {
 			}
 		}
 
-		// get the directory path, reletive to the contentPath
+		// get the directory path, relative to the contentPath
 		int pos = path.lastIndexOf("/");
 		String dirPath = (pos > 0) ? path.substring(0, pos + 1) : "";
 

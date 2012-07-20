@@ -72,7 +72,7 @@ public class TdsContextTest {
 	}	
 
 	private void cleanContext() throws IOException{
-
+		
 		Path start =  Paths.get( tdsContext.getContextRootPath());
 
 		if(Files.exists(start)){

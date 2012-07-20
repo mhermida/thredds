@@ -75,10 +75,13 @@ public final class ThreddsConfig {
   }
 
   /**
-   * Skips Viewer and datasetSource configuration!!!
+   ************************************************************* 
+   * Skips Viewer and datasetSource configuration!!!	    
+   * 
    * Viewer register the ViewerServlets???
    * (datasetSource depends on DatasetHandler)
    *  
+   *************************************************************  
    */
   private static void readConfig() throws FileNotFoundException{
     catalogRoots = new ArrayList<String>();

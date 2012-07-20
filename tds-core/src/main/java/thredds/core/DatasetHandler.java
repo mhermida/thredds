@@ -50,11 +50,6 @@ import ucar.nc2.ncml.NcMLReader;
 import ucar.nc2.util.cache.FileFactory;
 
 
-//import javax.servlet.http.HttpServletRequest;
-//import javax.servlet.http.HttpServletResponse;
-//import javax.servlet.ServletException;
-
-
 /**
  * CDM Datasets.
  * 1) if dataset with ncml, open that

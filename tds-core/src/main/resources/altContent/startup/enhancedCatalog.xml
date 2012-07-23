@@ -8,7 +8,7 @@
     <service name="HTTPServer" serviceType="HTTPServer" base="/thredds/fileServer/" />
   </service>
 
-  <dataset name="NCEP Model Data">
+  <dataset name="NCEP Model Data" >
     <metadata inherited="true">
       <serviceName>both</serviceName>
       <authority>edu.ucar.unidata</authority>

@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -93,7 +94,7 @@ public final class DataRootHandler implements InitializingBean {
 
 	private boolean staticCache;
 
-	private HashMap<String, InvCatalogImpl> staticCatalogHash; // Hash of static
+	private Map<String, InvCatalogImpl> staticCatalogHash; // Hash of static
 	// catalogs, key
 	// = path
 	private Set<String> staticCatalogNames; // Hash of static catalogs, key =
@@ -103,7 +104,7 @@ public final class DataRootHandler implements InitializingBean {
 
 	volatile private boolean isReinit = false;
 
-	private HashSet<String> idHash = new HashSet<String>(); // Hash of ids, to look for duplicates
+	private Set<String> idHash = new HashSet<String>(); // Hash of ids, to look for duplicates
 	//  PathMatcher is "effectively immutable"; use volatile for visibilty
 	private volatile PathMatcher pathMatcher = new PathMatcher(); // collection of DataRoot objects
 
@@ -237,7 +238,7 @@ public final class DataRootHandler implements InitializingBean {
 					+ ">.");
 			return;
 		}
-
+		
 		// Notify listeners of config catalog.
 		for (ConfigListener cl : configListeners)
 			cl.configCatalog(cat);
@@ -369,8 +370,33 @@ public final class DataRootHandler implements InitializingBean {
 		match.dirLocation = dataRoot.dirLocation;
 		match.dataRoot = dataRoot;
 		return match;
-	}	
+	}
+	
+	
+	public Map<String, InvCatalogImpl> getStaticCatalogs(){
+				
+		return staticCatalogHash;
+	}
 
+	public List<DataRoot> getDataRoots(){
+		
+		Iterator<Object> it = pathMatcher.iterator();
+		
+		List<DataRoot> dataRoots = new ArrayList<DataRoot>();
+		while(it.hasNext()){
+			Object o = it.next();
+			if( o instanceof DataRoot ){
+				DataRoot dr = (DataRoot)o;
+				dataRoots.add(dr);
+			}
+			if( o instanceof String ){
+				dataRoots.add(null);
+			}			
+		}
+		
+		return dataRoots;
+	}
+	
 
 	/**
 	 * Get the singleton.

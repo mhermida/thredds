@@ -34,6 +34,7 @@ package thredds.core;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -64,11 +65,13 @@ import thredds.catalog.InvDatasetImpl;
 import thredds.catalog.InvDatasetScan;
 import thredds.catalog.InvProperty;
 import thredds.catalog.InvService;
+import thredds.cataloggen.ProxyDatasetHandler;
 import thredds.crawlabledataset.CrawlableDataset;
 import thredds.crawlabledataset.CrawlableDatasetFile;
 import thredds.util.PathAliasReplacement;
 import thredds.util.StartsWithPathAliasReplacement;
 import ucar.nc2.time.CalendarDate;
+import ucar.nc2.units.DateType;
 import ucar.unidata.util.StringUtil2;
 
 /**
@@ -238,7 +241,7 @@ public final class DataRootHandler implements InitializingBean {
 					+ ">.");
 			return;
 		}
-		
+
 		// Notify listeners of config catalog.
 		for (ConfigListener cl : configListeners)
 			cl.configCatalog(cat);
@@ -371,17 +374,17 @@ public final class DataRootHandler implements InitializingBean {
 		match.dataRoot = dataRoot;
 		return match;
 	}
-	
-	
+
+
 	public Map<String, InvCatalogImpl> getStaticCatalogs(){
-				
+
 		return staticCatalogHash;
 	}
 
 	public List<DataRoot> getDataRoots(){
-		
+
 		Iterator<Object> it = pathMatcher.iterator();
-		
+
 		List<DataRoot> dataRoots = new ArrayList<DataRoot>();
 		while(it.hasNext()){
 			Object o = it.next();
@@ -393,10 +396,10 @@ public final class DataRootHandler implements InitializingBean {
 				dataRoots.add(null);
 			}			
 		}
-		
+
 		return dataRoots;
 	}
-	
+
 
 	/**
 	 * Get the singleton.
@@ -875,6 +878,185 @@ public final class DataRootHandler implements InitializingBean {
 		}
 
 		return null;
+	}
+
+
+	public InvCatalog getCatalog(String path, URI baseURI) throws FileNotFoundException {
+
+		if (path == null)
+			return null;
+
+		String workPath = path;
+		if (workPath.startsWith("/"))
+			workPath = workPath.substring(1);
+
+		// Check for static catalog.
+		boolean reread = false;
+		InvCatalogImpl catalog = staticCatalogHash.get(workPath);
+		if (catalog != null) {  // see if its stale
+			DateType expiresDateType = catalog.getExpires();
+			if ((expiresDateType != null) && expiresDateType.getDate().getTime() < System.currentTimeMillis())
+				reread = true;
+
+		} else if (!staticCache) {
+			reread = staticCatalogNames.contains(workPath); // see if we know if its a static catalog
+		}
+
+		// its a static catalog that needs to be read
+		if (reread) {
+			//File catFile = this.tdsContext.getConfigFileSource().getFile(workPath);
+			File catFile = this.tdsContext.getFileInContext(workPath);
+			if (catFile != null) {
+				String catalogFullPath = catFile.getPath();
+				log.info("**********\nReading catalog {} at {}\n", catalogFullPath, CalendarDate.present());
+
+				InvCatalogFactory factory = getCatalogFactory(true);
+				InvCatalogImpl reReadCat = readCatalog(factory, workPath, catalogFullPath);
+
+				if (reReadCat != null) {
+					catalog = reReadCat;
+					if (staticCache) { // a static catalog has been updated
+						synchronized (this) {
+							reReadCat.setStatic(true);
+							staticCatalogHash.put(workPath, reReadCat);
+						}
+					}
+				}
+
+			} else {
+				log.error("Static catalog does not exist that we expected = " + workPath);
+			}
+		}
+
+		// if ((catalog != null) && catalog.getBaseURI() == null) { for some reason you have to keep setting - is someone setting to null ?
+		if (catalog != null) {
+			// this is the first time we actually know an absolute, external path for the catalog, so we set it here
+			// LOOK however, this causes a possible thread safety problem
+			catalog.setBaseURI(baseURI);
+		}
+
+		// Check for dynamic catalog.
+		if (catalog == null)
+			catalog = makeDynamicCatalog(workPath, baseURI);
+
+		// Check for proxy dataset resolver catalog.
+		if (catalog == null && this.isProxyDatasetResolver(workPath))
+			catalog = (InvCatalogImpl) this.getProxyDatasetResolverCatalog(workPath, baseURI);
+
+		return catalog;		
+	}
+
+
+	public boolean isProxyDataset(String path) {
+		ProxyDatasetHandler pdh = this.getMatchingProxyDataset(path);
+		return pdh != null;
+	}
+
+	public boolean isProxyDatasetResolver(String path) {
+		ProxyDatasetHandler pdh = this.getMatchingProxyDataset(path);
+		if (pdh == null)
+			return false;
+
+		return pdh.isProxyDatasetResolver();
+	}
+
+
+	private ProxyDatasetHandler getMatchingProxyDataset(String path) {
+		InvDatasetScan scan = this.getMatchingScan(path);
+		if (null == scan) return null;
+
+		int index = path.lastIndexOf("/");
+		String proxyName = path.substring(index + 1);
+
+		Map pdhMap = scan.getProxyDatasetHandlers();
+		if (pdhMap == null) return null;
+
+		return (ProxyDatasetHandler) pdhMap.get(proxyName);
+	}
+
+	private InvDatasetScan getMatchingScan(String path) {
+		DataRoot reqDataRoot = findDataRoot(path);
+		if (reqDataRoot == null)
+			return null;
+
+		InvDatasetScan scan = null;
+		if (reqDataRoot.scan != null)
+			scan = reqDataRoot.scan;
+		else if (reqDataRoot.fmrc != null)  // TODO refactor UGLY FMRC HACK
+			scan = reqDataRoot.fmrc.getRawFileScan();
+		else if (reqDataRoot.featCollection != null)  // TODO refactor UGLY FMRC HACK
+			scan = reqDataRoot.featCollection.getRawFileScan();
+
+		return scan;
+	}
+
+	public InvCatalog getProxyDatasetResolverCatalog(String path, URI baseURI) {
+		if (!isProxyDatasetResolver(path))
+			throw new IllegalArgumentException("Not a proxy dataset resolver path <" + path + ">.");
+
+		InvDatasetScan scan = this.getMatchingScan(path);
+
+		// Call the matching InvDatasetScan to make the proxy dataset resolver catalog.
+		//noinspection UnnecessaryLocalVariable
+		InvCatalogImpl cat = scan.makeProxyDsResolverCatalog(path, baseURI);
+
+		return cat;
+	}		  
+
+
+
+	private InvCatalogImpl makeDynamicCatalog(String path, URI baseURI) {
+		String workPath = path;
+
+		// Make sure this is a dynamic catalog request.
+		if (!path.endsWith("/catalog.xml"))
+			return null;
+
+		// strip off the filename
+		int pos = workPath.lastIndexOf("/");
+		if (pos >= 0)
+			workPath = workPath.substring(0, pos);
+
+		// now look through the InvDatasetScans for a maximal match
+		DataRootMatch match = findDataRootMatch(workPath);
+		if (match == null)
+			return null;
+
+		// look for the fmrc
+		if (match.dataRoot.fmrc != null) {
+			return match.dataRoot.fmrc.makeCatalog(match.remaining, path, baseURI);
+		}
+
+		// look for the feature Collection
+		if (match.dataRoot.featCollection != null) {
+			return match.dataRoot.featCollection.makeCatalog(match.remaining, path, baseURI);
+		}
+
+		// Check that path is allowed, ie not filtered out
+		try {
+			if (getCrawlableDataset(workPath) == null)
+				return null;
+		} catch (IOException e) {
+			log.error("makeDynamicCatalog(): I/O error on request <" + path + ">: " + e.getMessage(), e);
+			return null;
+		}
+
+		// at this point, its gotta be a DatasetScan, not a DatasetRoot
+		if (match.dataRoot.scan == null) {
+			log.warn("makeDynamicCatalog(): No InvDatasetScan for =" + workPath + " request path= " + path);
+			return null;
+		}
+
+		InvDatasetScan dscan = match.dataRoot.scan;
+		if (log.isDebugEnabled())
+			log.debug("makeDynamicCatalog(): Calling makeCatalogForDirectory( " + baseURI + ", " + path + ").");
+		InvCatalogImpl cat = dscan.makeCatalogForDirectory(path, baseURI);
+
+		if (null == cat) {
+			log.error("makeDynamicCatalog(): makeCatalogForDirectory failed = " + workPath);
+		}
+
+		return cat;
 	}	
 
 

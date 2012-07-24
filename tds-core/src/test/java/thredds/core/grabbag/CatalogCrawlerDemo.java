@@ -1,5 +1,7 @@
 package thredds.core.grabbag;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -23,11 +25,14 @@ public class CatalogCrawlerDemo {
 	@Test
 	public void listAllDatasets(){
 		
-		cc = new CatalogCrawler( Type.all, null, new CatalogCrawler.Listener() {
+		cc = new CatalogCrawler( Type.all , null, new CatalogCrawler.Listener() {
 			
 			public void getDataset(InvDataset dd, Object context) {
 								
-				
+				List<InvDataset> datasets = dd.getDatasets();
+				for( InvDataset ds : datasets ){
+					System.out.println("DS ID:"+ ds.getID() +"  -- Name: "+ds.getName() );
+				}
 			}
 			
 			public boolean getCatalogRef(InvCatalogRef dd, Object context) {
@@ -38,7 +43,11 @@ public class CatalogCrawlerDemo {
 		
 		InvCatalog cat = DataRootHandler.getInstance().getStaticCatalogs().get("catalog.xml");
 		
-		int crawlResult = cc.crawl((InvCatalogImpl)cat, null, System.out, null);
+		List<InvDataset> datasets = cat.getDatasets();
+		
+		//int crawlResult = cc.crawl((InvCatalogImpl)cat, null, System.out, null);
+		for(InvDataset ds : datasets)
+			cc.crawlDataset(ds, null, System.out, this, true);
 
 	}
 

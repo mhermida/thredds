@@ -56,7 +56,7 @@ public class TdsContextTest {
 	@Test
 	public void getTdsProperties(){
 
-		assertEquals( "context", tdsContext.getContextRootPath() );
+		assertEquals( "content", tdsContext.getContentRootPath() );
 
 	}
 
@@ -65,7 +65,7 @@ public class TdsContextTest {
 
 		//Path tdsContextPath =  Paths.get( tdsContext.getContextRootPath()+"/thredds");		
 		//assertTrue(Files.exists(tdsContextPath));
-		Path tdsCatalog = Paths.get(tdsContext.getContextRootPath()+"/thredds/catalog.xml");
+		Path tdsCatalog = Paths.get(tdsContext.getContentRootPath()+"/thredds/catalog.xml");
 		assertTrue(Files.exists(tdsCatalog));			
 
 		//cleanContext();
@@ -73,7 +73,7 @@ public class TdsContextTest {
 
 	private void cleanContext() throws IOException{
 		
-		Path start =  Paths.get( tdsContext.getContextRootPath());
+		Path start =  Paths.get( tdsContext.getContentRootPath());
 
 		if(Files.exists(start)){
 

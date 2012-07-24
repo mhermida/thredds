@@ -32,9 +32,12 @@
  */
 package thredds.core;
 
-import ucar.unidata.util.StringUtil2;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
-import java.util.*;
+import ucar.unidata.util.StringUtil2;
 
 /**
  * A Collection of (String key, Object value) which is sorted on key.
@@ -43,12 +46,14 @@ import java.util.*;
  *
  * Matching is thread-safe, as long as put() is no longer being called.
  */
-public class PathMatcher {
+class PathMatcher {
 
-  private final TreeMap<String, Object> treeMap;
+  //private final TreeMap<String, Object> treeMap;
+	private final TreeMap<String, DataRoot> treeMap;
 
   public PathMatcher() {
-    treeMap = new TreeMap<String, Object>( new PathComparator());
+    //treeMap = new TreeMap<String, Object>( new PathComparator());
+	  treeMap = new TreeMap<String, DataRoot>( new PathComparator());
   }
 
   /**
@@ -56,8 +61,10 @@ public class PathMatcher {
    * @param key sort key
    * @param value add this object to the list to be searched.
    */
-  public void put(String key, Object value) {
-    treeMap.put( key, value == null ? key : value);
+  //public void put(String key, Object value) {
+  public void put(String key, DataRoot value) {
+	  treeMap.put( key, value); // --> ?
+    //treeMap.put( key, value == null ? key : value);
   }
 
   /**
@@ -82,8 +89,9 @@ public class PathMatcher {
    * @param path find object with longeth match where path.startsWith( key)
    * @return the value whose key is the longest that matches path, or null if none
    */
-  public Object match( String path) {
-    SortedMap<String, Object> tail = treeMap.tailMap( path);
+  public DataRoot match( String path) {
+    //SortedMap<String, Object> tail = treeMap.tailMap( path);
+	SortedMap<String, DataRoot> tail = treeMap.tailMap( path);
     if (tail.isEmpty()) return null;
     String after = tail.firstKey();
     //System.out.println("  "+path+"; after="+afterPath);
@@ -106,42 +114,42 @@ public class PathMatcher {
   private class PathComparator implements Comparator<String> {
     public int compare(String s1, String s2) {
       int compare = s2.compareTo( s1); // reverse sort
-      if (debug) System.out.println(" compare "+s1+" to "+s2+" = "+compare);
+      //if (debug) System.out.println(" compare "+s1+" to "+s2+" = "+compare);
       return compare;
     }
   }
 
   //////////////////////////////////////////////////////////////////////////////
   // testing
-  private void doit( String s) {
-    System.out.println(s+" == "+match(s));
-  }
-
-  static private boolean debug = false;
-  static public void main( String[] args) {
-    PathMatcher m = new PathMatcher();
-    m.put("/thredds/dods/test/longer", null);
-    m.put("/thredds/dods/test", null);
-    m.put("/thredds/dods/tester", null);
-    m.put("/thredds/dods/short", null);
-    m.put("/actionable", null);
-    m.put("myworld", null);
-    m.put("mynot", null);
-    m.put("ncmodels", null);
-    m.put("ncmodels/bzipped", null);
-
-
-    m.doit("nope");
-    m.doit("/thredds/dods/test");
-    m.doit("/thredds/dods/test/lo");
-    m.doit("/thredds/dods/test/longer/donger");
-    m.doit("myworldly");
-    m.doit("/my");
-    m.doit("mysnot");
-
-    debug = true;
-    m.doit("ncmodels/canonical");
-
-  }
+//  private void doit( String s) {
+//    System.out.println(s+" == "+match(s));
+//  }
+//
+//  static private boolean debug = false;
+//  static public void main( String[] args) {
+//    PathMatcher m = new PathMatcher();
+//    m.put("/thredds/dods/test/longer", null);
+//    m.put("/thredds/dods/test", null);
+//    m.put("/thredds/dods/tester", null);
+//    m.put("/thredds/dods/short", null);
+//    m.put("/actionable", null);
+//    m.put("myworld", null);
+//    m.put("mynot", null);
+//    m.put("ncmodels", null);
+//    m.put("ncmodels/bzipped", null);
+//
+//
+//    m.doit("nope");
+//    m.doit("/thredds/dods/test");
+//    m.doit("/thredds/dods/test/lo");
+//    m.doit("/thredds/dods/test/longer/donger");
+//    m.doit("myworldly");
+//    m.doit("/my");
+//    m.doit("mysnot");
+//
+//    debug = true;
+//    m.doit("ncmodels/canonical");
+//
+//  }
 
 }

@@ -120,7 +120,7 @@ public final class DataRootHandler implements InitializingBean {
 	 * 
 	 * @param tdsContext
 	 */
-	// private DataRootHandler(TdsContext tdsContext) {
+	// private DataRootHandler(tdsContext tdsContext) {
 	// this.tdsContext = tdsContext;
 	// }
 
@@ -169,8 +169,7 @@ public final class DataRootHandler implements InitializingBean {
 	}
 
 	public synchronized void initCatalogs(List<String> configCatalogRoots) {
-		// Notify listeners of start of initialization if not reinit (in which
-		// case it is already done).
+		// Notify listeners of start of initialization if not reinit (in which case it is already done).
 		if (!isReinit)
 			for (ConfigListener cl : configListeners)
 				cl.configStart();
@@ -216,7 +215,7 @@ public final class DataRootHandler implements InitializingBean {
 			throws IOException {
 		path = StringUtils.cleanPath(path);
 		// File f = this.tdsContext.getConfigFileSource().getFile(path);
-		File f = this.tdsContext.getFileInContext(path);
+		File f = this.tdsContext.getFileInContent(path);
 
 		if (f == null) {
 			log.error("initCatalog(): Catalog [" + path
@@ -443,12 +442,12 @@ public final class DataRootHandler implements InitializingBean {
 					}
 
 					String path;
-					String contextPathPlus = this.tdsContext.getContextPath() + "/";
-					if (href.startsWith(contextPathPlus)) {
-						path = href.substring(contextPathPlus.length()); // absolute starting from content root
+					String ContentPathPlus = this.tdsContext.getContentPath() + "/";
+					if (href.startsWith(ContentPathPlus)) {
+						path = href.substring(ContentPathPlus.length()); // absolute starting from content root
 					} else if (href.startsWith("/")) {
 						// Drop the catRef because it points to a non-TDS served catalog.
-						log.warn("**Warning: Skipping catalogRef <xlink:href=" + href + ">. Reference is relative to the server outside the context path [" + contextPathPlus + "]. " +
+						log.warn("**Warning: Skipping catalogRef <xlink:href=" + href + ">. Reference is relative to the server outside the Content path [" + ContentPathPlus + "]. " +
 								"Parent catalog info: Name=\"" + catref.getParentCatalog().getName() + "\"; Base URI=\"" + catref.getParentCatalog().getUriString() + "\"; dirPath=\"" + dirPath + "\".");
 						continue;
 					} else {
@@ -583,9 +582,7 @@ public final class DataRootHandler implements InitializingBean {
 		URI uri;
 		try {
 			uri = new URI("file:"
-					+ StringUtil2.escape(catalogFullPath, "/:-_.")); // LOOK
-			// needed
-			// ?
+					+ StringUtil2.escape(catalogFullPath, "/:-_.")); // LOOK needed ?
 		} catch (URISyntaxException e) {
 			log.error("readCatalog(): URISyntaxException="
 					+ e.getMessage());
@@ -692,86 +689,7 @@ public final class DataRootHandler implements InitializingBean {
 		DataRoot dataRoot;  // this is the directory that should be substituted for the rootPath
 	}
 
-	public class DataRoot {
-		String path;         // match this path
-		String dirLocation;  // to this directory
-		InvDatasetScan scan; // the InvDatasetScan that created this (may be null)
-		InvDatasetFmrc fmrc; // the InvDatasetFmrc that created this (may be null)
-		InvDatasetFeatureCollection featCollection; // the InvDatasetFeatureCollection that created this (may be null)
-		boolean cache = true;
 
-		// Use this to access CrawlableDataset in dirLocation.
-		// I.e., used by datasets that reference a <datasetRoot>
-		InvDatasetScan datasetRootProxy;
-
-		DataRoot(InvDatasetFeatureCollection featCollection) {
-			this.path = featCollection.getPath();
-			this.featCollection = featCollection;
-			this.dirLocation = featCollection.getTopDirectoryLocation();
-			log.info(" DataRoot adding featureCollection {}\n", featCollection.getConfig());
-		}
-
-		DataRoot(InvDatasetFmrc fmrc) {
-			this.path = fmrc.getPath();
-			this.fmrc = fmrc;
-
-			InvDatasetFmrc.InventoryParams params = fmrc.getFmrcInventoryParams();
-			if (null != params)
-				dirLocation = params.location;
-		}
-
-		DataRoot(InvDatasetScan scan) {
-			this.path = scan.getPath();
-			this.scan = scan;
-			this.dirLocation = scan.getScanLocation();
-			this.datasetRootProxy = null;
-		}
-
-		DataRoot(String path, String dirLocation, boolean cache) {
-			this.path = path;
-			this.dirLocation = dirLocation;
-			this.cache = cache;
-			this.scan = null;
-
-			makeProxy();
-		}
-
-		void makeProxy() {
-			/*   public InvDatasetScan( InvDatasetImpl parent, String name, String path, String scanLocation,
-	                         String configClassName, Object configObj, CrawlableDatasetFilter filter,
-	                         CrawlableDatasetLabeler identifier, CrawlableDatasetLabeler namer,
-	                         boolean addDatasetSize,
-	                         CrawlableDatasetSorter sorter, Map proxyDatasetHandlers,
-	                         List childEnhancerList, CatalogRefExpander catalogRefExpander ) */
-			this.datasetRootProxy = new InvDatasetScan(null, "", this.path, this.dirLocation,
-					null, null, null, null, null, false, null, null, null, null);
-		}
-
-
-		// used by PathMatcher
-		public String toString() {
-			return path;
-		}
-
-		// debug
-		public String toString2() {
-			return path + "," + dirLocation;
-		}
-
-		/**
-		 * Instances which have same path are equal.
-		 */
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-			DataRoot root = (DataRoot) o;
-			return path.equals(root.path);
-		}
-
-		public int hashCode() {
-			return path.hashCode();
-		}
-	}
 
 	/**
 	 * Return the java.io.File represented by the CrawlableDataset to which the
@@ -905,7 +823,7 @@ public final class DataRootHandler implements InitializingBean {
 		// its a static catalog that needs to be read
 		if (reread) {
 			//File catFile = this.tdsContext.getConfigFileSource().getFile(workPath);
-			File catFile = this.tdsContext.getFileInContext(workPath);
+			File catFile = this.tdsContext.getFileInContent(workPath);
 			if (catFile != null) {
 				String catalogFullPath = catFile.getPath();
 				log.info("**********\nReading catalog {} at {}\n", catalogFullPath, CalendarDate.present());

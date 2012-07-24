@@ -19,10 +19,6 @@ import thredds.catalog.InvCatalogImpl;
 import thredds.catalog.InvDataset;
 import thredds.catalog.InvDatasetScan;
 import thredds.core.DataRootHandler;
-import thredds.core.DataRootHandler.DataRoot;
-import thredds.core.DatasetHandler;
-import ucar.nc2.dataset.NetcdfDataset;
-import ucar.nc2.dt.GridDataset;
 
 @ContextConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -63,9 +59,9 @@ public class ListDatasets {
 			if(dataset instanceof InvDatasetScan){
 				InvDatasetScan dscan = (InvDatasetScan) dataset;		
 				//System.out.println("Making catalog for: "+dscan.getPath()+"/catalog.xml"   );								
-				//InvCatalog cat = dscan.makeCatalogForDirectory( dscan.getPath()+"/catalog.xml" , URI.create(dscan.getPath()+"/catalog.xml"));
-				
-				InvCatalog cat = DataRootHandler.getInstance().getCatalog(dscan.getPath()+"/catalog.xml" , URI.create(dscan.getPath()+"/catalog.xml")); 
+				//InvCatalog cat = dscan.makeCatalogForDirectory( dscan.getPath()+"/catalog.xml" , URI.create(dscan.getPath()+"/catalog.xml"));				
+				InvCatalog cat = DataRootHandler.getInstance().getCatalog(dscan.getPath()+"/catalog.xml" , URI.create(dscan.getPath()+"/catalog.xml"));
+			
 						
 				List<InvDataset> allDatasets= cat.getDatasets();
 				

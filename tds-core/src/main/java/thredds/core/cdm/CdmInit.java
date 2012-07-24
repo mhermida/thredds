@@ -103,7 +103,7 @@ public class CdmInit implements InitializingBean,  DisposableBean{
     String fcCache = ThreddsConfig.get("FeatureCollection.dir", null);
     if (fcCache == null)
       //fcCache = ThreddsConfig.get("FeatureCollection.cacheDirectory", tdsContext.getContextDirectory().getPath() + "/cache/collection/");  // cacheDirectory is old way
-    	fcCache = ThreddsConfig.get("FeatureCollection.cacheDirectory", tdsContext.getContextDirectory() + "/cache/collection/");  // cacheDirectory is old way
+    	fcCache = ThreddsConfig.get("FeatureCollection.cacheDirectory", tdsContext.getContentDirectory() + "/cache/collection/");  // cacheDirectory is old way
     long maxSizeBytes = ThreddsConfig.getBytes("FeatureCollection.maxSize", 0);
     int jvmPercent = ThreddsConfig.getInt("FeatureCollection.jvmPercent", 2);
 
@@ -192,7 +192,7 @@ public class CdmInit implements InitializingBean,  DisposableBean{
 
     // persist joinExisting aggregations. default every 24 hours, delete stuff older than 90 days
     //String dir = ThreddsConfig.get("AggregationCache.dir", new File( tdsContext.getContentDirectory().getPath(), "/cache/agg/").getPath());
-    String dir = ThreddsConfig.get("AggregationCache.dir", new File( tdsContext.getContextDirectory(), "/cache/agg/").getPath());
+    String dir = ThreddsConfig.get("AggregationCache.dir", new File( tdsContext.getContentDirectory(), "/cache/agg/").getPath());
     int scourSecs = ThreddsConfig.getSeconds("AggregationCache.scour", 24 * 60 * 60);
     int maxAgeSecs = ThreddsConfig.getSeconds("AggregationCache.maxAge", 90 * 24 * 60 * 60);
     aggCache = new DiskCache2(dir, false, maxAgeSecs / 60, scourSecs / 60);
@@ -206,7 +206,7 @@ public class CdmInit implements InitializingBean,  DisposableBean{
 
     // Nj22 disk cache
     //dir = ThreddsConfig.get("DiskCache.dir", new File( tdsContext.getContentDirectory(), "/cache/cdm/" ).getPath());
-    dir = ThreddsConfig.get("DiskCache.dir", new File( tdsContext.getContextDirectory(), "/cache/cdm/" ).getPath());
+    dir = ThreddsConfig.get("DiskCache.dir", new File( tdsContext.getContentDirectory(), "/cache/cdm/" ).getPath());
     boolean alwaysUse = ThreddsConfig.getBoolean("DiskCache.alwaysUse", false);
     scourSecs = ThreddsConfig.getSeconds("DiskCache.scour", 60 * 60); // default once an hour
     long maxSize = ThreddsConfig.getBytes("DiskCache.maxSize", (long) 1000 * 1000 * 1000);  // default 1 Gbyte

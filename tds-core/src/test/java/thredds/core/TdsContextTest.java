@@ -32,24 +32,25 @@ public class TdsContextTest {
 	/*
 	 * thredds directory within the context directory. It contains all the config files
 	 */
-	public static final String TDS_CONTEXT_DIRECTORY = "thredds";
+	//public static final String TDS_CONTEXT_DIRECTORY = "thredds";
 
 	/*
 	 * thredds public directory.
 	 */	
-	public static final String TDS_PUBLIC_DIRECTORY = TDS_CONTEXT_DIRECTORY+"/public";
+	//public static final String TDS_PUBLIC_DIRECTORY = TDS_CONTEXT_DIRECTORY+"/public";
 
 	@Autowired
 	TdsContext tdsContext;
 
 	@Test
 	public void tdsContextDirectoryName(){
-		assertEquals("thredds", TDS_CONTEXT_DIRECTORY );
+		assertEquals("thredds", tdsContext.getContentDirectory() );
 	}
 
 	@Test
 	public void tdsPublicDirectoryName(){
-		assertTrue(TDS_PUBLIC_DIRECTORY.endsWith("/public"));
+		//assertTrue(TDS_PUBLIC_DIRECTORY.endsWith("/public"));
+		assertTrue(tdsContext.getPublicDocFileDirectory().endsWith("/public"));
 	}	
 
 	//Check context directory

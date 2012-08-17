@@ -68,7 +68,7 @@ public final class ThreddsConfig {
   private static List<String> catalogRoots;
   private static List<String> contentRootList;
 
-  public static void init( String filename) throws FileNotFoundException {
+  static void init( String filename) throws FileNotFoundException {
     _filename = filename;
 
     readConfig();

@@ -261,6 +261,18 @@
 
   <!-- end fmrc debugging -->
 
+  <!--ESGF filters debugging -->
+  <logger name="esg" additivity="false">
+    <level value="DEBUG"/>
+    <appender-ref ref="threddsServlet"/>
+  </logger>  
+  <logger name="org.springframework.security" additivity="false">
+    <level value="DEBUG"/>
+    <appender-ref ref="threddsServlet"/>
+  </logger>  
+  
+  
+
   <!-- All normal logging messages go to threddsServlet.log -->
   <logger name="opendap" additivity="false">
     <level value="INFO"/>

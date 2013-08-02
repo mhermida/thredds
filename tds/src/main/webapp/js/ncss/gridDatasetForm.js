@@ -1,5 +1,4 @@
 
-var map;
 
 Ncss.changeSpatialSubsetType = function(){
 		
@@ -31,7 +30,8 @@ Ncss.changeSpatialSubsetType = function(){
 		$('input[name=west]').attr("disabled","disabled");
 		$('input[name=east]').attr("disabled","disabled");
 			
-			
+		Ncss.toggleBoxLayer(false);
+		Ncss.toggleEditionPanel(false);
 			
 	}else{
 		
@@ -56,7 +56,9 @@ Ncss.changeSpatialSubsetType = function(){
 		$('input[name=minx]').attr("disabled","disabled");
 		$('input[name=maxx]').attr("disabled","disabled");
 	
-				
+		//Ncss.map.getLayersByName("Box layer")[0].setVisibility(true);
+		Ncss.toggleBoxLayer(true);
+		Ncss.toggleEditionPanel(true);
 	}
 		
 };
@@ -129,8 +131,67 @@ Ncss.verticalSubsetting = function(){
 
 
 Ncss.initGridDataset = function(){
+	
+	//Create the box layer for the selected BBOX
+	var boxlayername ="Box layer";
+	var boxlayer = new OpenLayers.Layer.Vector(boxlayername,{
+		styleMap: new OpenLayers.StyleMap({
+			strokeWidth:1,
+			strokeColor:"#000000",
+			strokeDashstyle:'solid',
+			fillOpacity: 0.3,
+			fillColor:"#0088B5"
+		})
+	});
+	
+	//Drawing control. Draws the selected polygon
+	var drawcontrol = new OpenLayers.Control.DrawFeature(boxlayer,
+			OpenLayers.Handler.RegularPolygon,
+			{
+				featureAdded:function(){
+					var feature = this.layer.features[this.layer.features.length-1];
+					this.layer.removeAllFeatures();
+					this.layer.addFeatures([feature]);
+					//Get the bounding box bounds (north, south, east, west)
+					Ncss.updateBBOXInputs( feature.geometry.bounds.top,
+							feature.geometry.bounds.bottom,
+							feature.geometry.bounds.right,
+							feature.geometry.bounds.left);
+				},
+				displayClass:'olControlDrawFeaturePolygon',
+				handlerOptions:{
+					sides:4,
+					irregular:true
+				}
+			});
+	
+	//Creates a custom panel for our two controls, allowing user to select/unselec the drawing mode 
+	var panel = new OpenLayers.Control.Panel({
+			defaultControl:drawcontrol ,
+			displayClass:'olControlEditingToolbar',
+			//Looks ugly but could be improved...
+			/*createControlMarkup: function(control){		
+				var button = document.createElement('button'),
+				textSpan = document.createElement('span');
+				if(control.text){
+					textSpan.innerHTML = control.text;
+				}else{
+					textSpan.innerHTML = "No control text";
+				}
+				button.appendChild(textSpan);
+				return button;
+					
+				}*/
+			});
+	
+	//Adds our two controls to the panel...
+	panel.addControls(
+			[drawcontrol,
+			 new OpenLayers.Control.Navigation() ]
+			);
+	
 	Ncss.initGridDatasetForm();
-	Ncss.initMapPreview();
+	Ncss.initMapPreview([boxlayer], [panel]);
 };
 
 Ncss.initGridDatasetForm = function(){	
@@ -163,7 +224,11 @@ Ncss.initGridDatasetForm = function(){
 		$('input[name=north]').val(Ncss.fullLatLonExt.north);
 		$('input[name=south]').val(Ncss.fullLatLonExt.south);
 		$('input[name=west]').val(Ncss.fullLatLonExt.west);
-		$('input[name=east]').val(Ncss.fullLatLonExt.east);		
+		$('input[name=east]').val(Ncss.fullLatLonExt.east);
+		
+		var boxlayer = Ncss.map.getLayersByName("Box layer");
+		boxlayer[0].removeAllFeatures();
+		
 	});
 	
 	$('#resetProjbbox').click(function(){
@@ -205,20 +270,24 @@ Ncss.initGridDatasetForm = function(){
 };
 
 Ncss.toogleLLSubsetting = function(){
-	Ncss.log("Will disable/enable spatial subsetting...");
+	
 	if(this.checked){
-		Ncss.log("disabling bounding params...");
+		//Ncss.log("disabling bounding params...");
 		var inputs = $(':input[type=text]', $('#latlonSubset'));
 		for(var i=0; i<inputs.length; i++ ){
 			$(inputs[i]).attr("disabled","disabled");
 		}
+		Ncss.toggleBoxLayer(false);
+		Ncss.toggleEditionPanel(false);
 		
 	}else{
-		Ncss.log("enabling bounding params...");
+		//Ncss.log("enabling bounding params...");
 		var inputs = $(':input[type=text]', $('#latlonSubset'));
 		for(var i=0; i<inputs.length; i++ ){
 			$(inputs[i]).removeAttr("disabled");
-		}		
+		}
+		Ncss.toggleBoxLayer(true);
+		Ncss.toggleEditionPanel(true);
 	}
 };
 
@@ -238,6 +307,28 @@ Ncss.toogleProjSubsetting = function(){
 			$(inputs[i]).removeAttr("disabled");
 		}		
 	}
+};
+
+
+Ncss.updateBBOXInputs = function(north, south, east, west){
+	$('input[name=north]').val(north);
+	$('input[name=south]').val(south);
+	$('input[name=west]').val(west);
+	$('input[name=east]').val(east);	
+};
+
+Ncss.toggleEditionPanel = function(activate){
+	var panels = Ncss.map.getControlsByClass("OpenLayers.Control.Panel");
+	
+	if(activate){
+		panels[0].activate();
+	}else{
+		panels[0].deactivate();
+	}
+}; 
+
+Ncss.toggleBoxLayer = function(visibility){
+	Ncss.map.getLayersByName("Box layer")[0].setVisibility(visibility);
 };
 
 

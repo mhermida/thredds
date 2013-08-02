@@ -31,7 +31,7 @@ for more information.
         <variable id="Absolute_vorticity_isobaric">                            <!-- units: 1/s -->
             <defaultColorScaleRange>0.00002 0.00030</defaultColorScaleRange>
         </variable>
-        <variable id="Albedo_surface_Mixed_intervals_average">                 <!-- units: % -->
+        <variable id="Albedo_surface_Mixed_intervals_Average">                 <!-- units: % -->
             <defaultColorScaleRange>0.0 100.0</defaultColorScaleRange>
         </variable>
         <variable id="Best_4_layer_Lifted_Index_pressure_difference_layer">    <!-- units: K -->

@@ -1,64 +1,42 @@
 
-/*Ncss.changeSpatialSubsetType = function(){
-		
-	var latlonTab =$('#inputLatLonSubset');
-	var coordTab = $('#inputCoordSubset');	
-	
-	var coordinateSubset = $("#coordinateSubset");
-	var latlonSubset = $("#latlonSubset");
-
-	if(latlonTab.attr('class') == "selected" ){
-		
-		latlonTab.removeClass("selected").addClass("unselected");;		
-		
-		coordTab.removeClass("unselected").addClass("selected");
-		
-		latlonSubset.addClass("hidden");		
-		coordinateSubset.removeClass("hidden");
-		
-		$('input[name=maxy]').removeAttr("disabled");
-		$('input[name=miny]').removeAttr("disabled");
-		$('input[name=minx]').removeAttr("disabled");
-		$('input[name=maxx]').removeAttr("disabled");
-		
-		$('input[name=north]').attr("disabled","disabled");
-		$('input[name=south]').attr("disabled","disabled");
-		$('input[name=west]').attr("disabled","disabled");
-		$('input[name=east]').attr("disabled","disabled");		
-			
-	}else{
-		
-		latlonTab.removeClass("unselected");
-		latlonTab.addClass("selected");
-		
-		coordTab.removeClass("selected");
-		coordTab.addClass("unselected");		
-		
-		latlonSubset.removeClass("hidden");		
-		coordinateSubset.addClass("hidden");		
-
-		$('input[name=north]').removeAttr("disabled");
-		$('input[name=south]').removeAttr("disabled");
-		$('input[name=west]').removeAttr("disabled");
-		$('input[name=east]').removeAttr("disabled");
-		
-		$('input[name=maxy]').attr("disabled","disabled");
-		$('input[name=miny]').attr("disabled","disabled");
-		$('input[name=minx]').attr("disabled","disabled");
-		$('input[name=maxx]').attr("disabled","disabled");		
-				
-	}
-		
-};*/
-
-
-
 //$(document).ready( function(){
 //});
 
 Ncss.initGridAsPoint = function(){
+	
+	//Layer that will display the selected point
+	var point = new OpenLayers.Layer.Vector("point" , {
+		styleMap: new OpenLayers.StyleMap({
+			pointRadius:3,
+			strokeWidth:1,
+			strokeColor:"#000000",
+			strokeDashstyle:'solid',
+			fillOpacity: 0.3,
+			fillColor:"#0088B5"
+		})
+	});	
+	
+	point.events.register("click", point, function(e){
+		
+		//TODO: -check if the point is in the polygon
+		
+			
+				
+		var latlon = this.map.getLonLatFromPixel(new OpenLayers.Pixel(e.layerX, e.layerY));
+		//var latlon = this.map.getLonLatFromPixel(e.xy);
+
+	    var ftr = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Point(latlon.lon , latlon.lat));		    
+	    point.removeFeatures(point.features);
+	    point.addFeatures([ftr]);
+	    point.refresh();
+		$('#latitude').val(latlon.lat.toFixed(4));
+		$('#longitude').val(latlon.lon.toFixed(4));
+	    Ncss.log("User clicked on: "+latlon.lat +", "+latlon.lon);
+		
+	});	
+	
 	Ncss.initGridAsPointForm();
-	Ncss.initMapPreview();
+	Ncss.initMapPreview([point]);
 
 };
 

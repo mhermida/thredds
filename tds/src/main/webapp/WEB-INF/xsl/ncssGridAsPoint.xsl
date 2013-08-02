@@ -257,10 +257,10 @@
 									
 									<div class="borderLightGrey">
 										<label class="sized_big">Latitude:</label>
-										<input type="text" name="latitude" size="10" />
+										<input type="text" name="latitude" id="latitude" size="10" />
 										<br />
 										<label class="sized_big">Longitude:</label>
-										<input type="text" name="longitude" size="10" />
+										<input type="text" name="longitude" id="longitude" size="10" />
 										<br />
 										<span class="bold">Within Bounding Box:</span>
 										<div class="top">

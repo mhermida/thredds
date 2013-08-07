@@ -18,21 +18,24 @@ Ncss.initGridAsPoint = function(){
 	
 	point.events.register("click", point, function(e){
 		
-		//TODO: -check if the point is in the polygon
-		
-			
-				
+		var gridBorder  =  this.map.getLayersByName("Grid preview");
+		var pol = gridBorder[0].features[0].geometry;
+							
 		var latlon = this.map.getLonLatFromPixel(new OpenLayers.Pixel(e.layerX, e.layerY));
-		//var latlon = this.map.getLonLatFromPixel(e.xy);
-
-	    var ftr = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Point(latlon.lon , latlon.lat));		    
-	    point.removeFeatures(point.features);
-	    point.addFeatures([ftr]);
-	    point.refresh();
-		$('#latitude').val(latlon.lat.toFixed(4));
-		$('#longitude').val(latlon.lon.toFixed(4));
-	    Ncss.log("User clicked on: "+latlon.lat +", "+latlon.lon);
 		
+		if(pol.containsPoint(new OpenLayers.Geometry.Point( latlon.lon, latlon.lat))){
+
+			var ftr = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Point(latlon.lon , latlon.lat));		    
+			point.removeFeatures(point.features);
+			point.addFeatures([ftr]);
+			point.refresh();
+			$('#latitude').val(latlon.lat.toFixed(4));
+			$('#longitude').val(latlon.lon.toFixed(4));
+			Ncss.log("User clicked on: "+latlon.lat +", "+latlon.lon);
+		}else{
+			Ncss.log("Point "+latlon.lat +", "+latlon.lon+ " is out of boundaries!!!");
+		}	
+			
 	});	
 	
 	Ncss.initGridAsPointForm();

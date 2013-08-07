@@ -52,7 +52,7 @@ Ncss.changeTemporalSubsetting = function(){
  */
 Ncss.initMapPreview = function( layers, controls ){
 
-	var vector_layer = new OpenLayers.Layer.Vector({
+	var vector_layer = new OpenLayers.Layer.Vector("Grid preview", {
 		renderers:["Canvas"],
 	});	
 	

@@ -149,14 +149,26 @@ Ncss.initGridDataset = function(){
 			OpenLayers.Handler.RegularPolygon,
 			{
 				featureAdded:function(){
+					
+					var gridBorder  =  this.map.getLayersByName("Grid preview");
+					var pol = gridBorder[0].features[0].geometry;
+					
 					var feature = this.layer.features[this.layer.features.length-1];
-					this.layer.removeAllFeatures();
-					this.layer.addFeatures([feature]);
-					//Get the bounding box bounds (north, south, east, west)
-					Ncss.updateBBOXInputs( feature.geometry.bounds.top,
+					
+					//Global datasets need better handling...????					
+					if(pol.intersects( feature.geometry )){
+										
+						this.layer.removeAllFeatures();
+						this.layer.addFeatures([feature]);
+						//Get the bounding box bounds (north, south, east, west)
+						Ncss.updateBBOXInputs( feature.geometry.bounds.top,
 							feature.geometry.bounds.bottom,
 							feature.geometry.bounds.right,
 							feature.geometry.bounds.left);
+					
+					}else{
+						this.layer.removeAllFeatures();
+					}
 				},
 				displayClass:'olControlDrawFeaturePolygon',
 				handlerOptions:{
